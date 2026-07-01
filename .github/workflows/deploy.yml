@@ -1,0 +1,30 @@
+# Автозаливка на Selectel S3 при каждом git push в ветку main.
+# ВКЛЮЧИТСЯ, когда добавишь секреты в GitHub:
+#   Settings → Secrets and variables → Actions → New repository secret
+#   S3_KEY_ID, S3_SECRET  — S3-ключи из панели Selectel
+#   S3_BUCKET             — имя контейнера
+#   S3_ENDPOINT           — endpoint из панели (напр. https://s3.storage.selcloud.ru)
+name: deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npm run build
+      - name: Upload dist to Selectel S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.S3_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
+        run: |
+          aws s3 sync ./dist s3://${{ secrets.S3_BUCKET }} \
+            --endpoint-url ${{ secrets.S3_ENDPOINT }} \
+            --delete
