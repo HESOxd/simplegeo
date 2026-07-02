@@ -142,11 +142,16 @@ export default function Trainer() {
             <p className="text-sm text-emerald-700 font-medium mt-3">Узнать больше →</p>
           </Link>
 
-          <Link to="/course" className="block bg-white rounded-2xl border border-slate-200 p-5 hover:border-emerald-300 transition-colors">
-            <p className="font-semibold text-slate-900 mb-1">Разбор ОГЭ по географии</p>
-            <p className="text-sm text-slate-600 leading-relaxed mb-3">Mind map по всем заданиям, примеры решений и лайфхаки.</p>
-            <p className="text-lg font-bold text-slate-900">699 ₽</p>
-            <p className="text-sm text-emerald-700 font-medium mt-2">Подробнее о курсе →</p>
+          <Link to="/course" className="block bg-white rounded-2xl border border-slate-200 overflow-hidden hover:border-emerald-300 transition-colors">
+            <img src="/course-preview.jpg" alt="Полный гайд по решению заданий ОГЭ" className="w-full aspect-video object-contain bg-slate-50 border-b border-slate-100" />
+            <div className="p-5">
+              <p className="font-semibold text-slate-900 mb-1">Полный гайд по решению заданий ОГЭ</p>
+              <p className="text-sm text-slate-600 leading-relaxed mb-3">Mind map по всем заданиям, примеры решений и лайфхаки.</p>
+              <div className="flex items-center justify-between">
+                <p className="text-lg font-bold text-slate-900">699 ₽</p>
+                <p className="text-sm text-emerald-700 font-medium">Подробнее →</p>
+              </div>
+            </div>
           </Link>
         </div>
         </div>
