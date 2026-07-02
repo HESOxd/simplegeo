@@ -65,42 +65,65 @@ export default function Trainer() {
   // ── ГЛАВНЫЙ ЭКРАН ──
   if (screen === "home") {
     return (
-      <Shell>
-        <div className="mb-8">
-          <p className="text-emerald-700 font-semibold tracking-wide text-sm uppercase">ОГЭ · География</p>
-          <h1 className="text-3xl font-bold text-slate-900 mt-1">Тренажёр по разделам</h1>
-          <p className="text-slate-500 mt-2">Банк ФИПИ, {TASKS.length} заданий. Выбери раздел и число вопросов.</p>
+      <div className="max-w-6xl mx-auto p-4 py-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <div className="mb-8">
+            <p className="text-emerald-700 font-semibold tracking-wide text-sm uppercase">ОГЭ · География</p>
+            <h1 className="text-3xl font-bold text-slate-900 mt-1">Тренажёр по разделам</h1>
+            <p className="text-slate-500 mt-2">Банк ФИПИ, {TASKS.length} заданий. Выбери раздел и число вопросов.</p>
+          </div>
+
+          <Link
+            to="/tasks/variant"
+            className="block mb-8 bg-slate-900 hover:bg-slate-800 text-white rounded-xl p-4 transition-colors"
+          >
+            <p className="font-semibold">Собрать полный вариант — 30 заданий</p>
+            <p className="text-sm text-slate-300 mt-0.5">Как на настоящем экзамене, без таймера, с разбором ошибок</p>
+          </Link>
+
+          <p className="text-sm font-medium text-slate-700 mb-2">Раздел</p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-6">
+            <Chip active={section === "all"} onClick={() => setSection("all")}>Все разделы</Chip>
+            {sectionList.map((s) => (
+              <Chip key={s.id} active={section === s.id} onClick={() => setSection(s.id)}>
+                {s.name} <span className="opacity-50">· {s.n}</span>
+              </Chip>
+            ))}
+          </div>
+
+          <p className="text-sm font-medium text-slate-700 mb-2">Сколько вопросов</p>
+          <div className="flex flex-wrap gap-2 mb-8">
+            {[5, 10, 20, "all"].map((n) => (
+              <Chip key={n} active={count === n} onClick={() => setCount(n)}>{n === "all" ? "Все" : n}</Chip>
+            ))}
+          </div>
+
+          <button onClick={start} className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3.5 rounded-xl transition-colors">
+            Начать
+          </button>
         </div>
 
-        <Link
-          to="/tasks/variant"
-          className="block mb-8 bg-slate-900 hover:bg-slate-800 text-white rounded-xl p-4 transition-colors"
-        >
-          <p className="font-semibold">Собрать полный вариант — 30 заданий</p>
-          <p className="text-sm text-slate-300 mt-0.5">Как на настоящем экзамене, без таймера, с разбором ошибок</p>
-        </Link>
+        <div className="flex flex-col gap-4 lg:sticky lg:top-6 lg:self-start">
+          <Link to="/about" className="block bg-white rounded-2xl border border-slate-200 p-5 hover:border-emerald-300 transition-colors">
+            <div className="flex items-center gap-3 mb-3">
+              <img src="/photo.jpg" alt="Юрий" className="w-12 h-12 rounded-full object-cover border-2 border-emerald-100" />
+              <div>
+                <p className="font-semibold text-slate-900">Юрий</p>
+                <p className="text-xs text-slate-500">Репетитор по географии</p>
+              </div>
+            </div>
+            <p className="text-sm text-slate-600 leading-relaxed">3 года преподаю, 100+ учеников, средний балл на ОГЭ — 4,7.</p>
+            <p className="text-sm text-emerald-700 font-medium mt-3">Узнать больше →</p>
+          </Link>
 
-        <p className="text-sm font-medium text-slate-700 mb-2">Раздел</p>
-        <div className="flex flex-wrap gap-2 mb-6">
-          <Chip active={section === "all"} onClick={() => setSection("all")}>Все разделы</Chip>
-          {sectionList.map((s) => (
-            <Chip key={s.id} active={section === s.id} onClick={() => setSection(s.id)}>
-              {s.name} <span className="opacity-50">· {s.n}</span>
-            </Chip>
-          ))}
+          <Link to="/course" className="block bg-white rounded-2xl border border-slate-200 p-5 hover:border-emerald-300 transition-colors">
+            <p className="font-semibold text-slate-900 mb-1">Разбор ОГЭ по географии</p>
+            <p className="text-sm text-slate-600 leading-relaxed mb-3">Mind map по всем заданиям, примеры решений и лайфхаки.</p>
+            <p className="text-lg font-bold text-slate-900">699 ₽</p>
+            <p className="text-sm text-emerald-700 font-medium mt-2">Подробнее о курсе →</p>
+          </Link>
         </div>
-
-        <p className="text-sm font-medium text-slate-700 mb-2">Сколько вопросов</p>
-        <div className="flex flex-wrap gap-2 mb-8">
-          {[5, 10, 20, "all"].map((n) => (
-            <Chip key={n} active={count === n} onClick={() => setCount(n)}>{n === "all" ? "Все" : n}</Chip>
-          ))}
-        </div>
-
-        <button onClick={start} className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3.5 rounded-xl transition-colors">
-          Начать
-        </button>
-      </Shell>
+      </div>
     );
   }
 

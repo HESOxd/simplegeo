@@ -15,7 +15,7 @@ function TopNav() {
   const { pathname } = useLocation();
   return (
     <div className="bg-white border-b border-slate-200">
-      <div className="max-w-lg mx-auto flex px-4">
+      <div className="max-w-6xl mx-auto flex px-4">
         {NAV.map((item) => {
           const active = pathname === item.to || (item.to === "/tasks" && pathname.startsWith("/tasks"));
           return (
