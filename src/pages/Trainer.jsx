@@ -77,7 +77,7 @@ export default function Trainer() {
   if (screen === "home") {
     return (
       <div className="relative overflow-hidden">
-        <GreenBlob className="right-0 top-0 h-[520px] w-56 opacity-70 hidden lg:block" />
+        <GreenBlob className="right-0 inset-y-0 w-[26rem] opacity-70 hidden lg:block" />
         <div className="relative max-w-6xl mx-auto p-4 py-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           <div className="mb-8">

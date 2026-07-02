@@ -9,22 +9,49 @@ const FEATURES = [
   {
     title: "Xmind файл",
     desc: "с удобным интерфейсом",
-    icon: <rect x="5" y="5" width="14" height="14" rx="3" fill="#1f8a5e" />,
+    icon: (
+      <>
+        <circle cx="6" cy="12" r="2.4" />
+        <circle cx="18" cy="6" r="2.4" />
+        <circle cx="18" cy="18" r="2.4" />
+        <path d="M8.2 11 L15.8 7 M8.2 13 L15.8 17" />
+      </>
+    ),
   },
   {
     title: "Подробное решение",
     desc: "с объяснением для каждого задания",
-    icon: <circle cx="12" cy="12" r="7" fill="#1f8a5e" />,
+    icon: (
+      <>
+        <path d="M6 3h9l4 4v14H6z" strokeLinejoin="round" />
+        <path d="M9 12h7M9 16h7M9 8h3" />
+      </>
+    ),
   },
   {
     title: "Лайфхаки и советы",
     desc: "для успешной сдачи экзамена",
-    icon: <path d="M12 4 L20 20 L4 20 Z" fill="#4f6bed" />,
+    icon: (
+      <>
+        <path d="M12 3a6 6 0 0 0-3.5 10.9c.6.45 1 1.15 1 1.9V17h5v-1.2c0-.75.4-1.45 1-1.9A6 6 0 0 0 12 3Z" />
+        <path d="M9.5 20h5M10.2 22h3.6" />
+      </>
+    ),
   },
 ];
 const PRICE = "699 ₽";
 const TELEGRAM_SIGNUP = "https://t.me/prostayageo";
 const PREVIEW_IMAGE = "/course-preview.jpg";
+
+function FeatureIcon({ children }) {
+  return (
+    <div className="w-11 h-11 flex-shrink-0 rounded-xl bg-emerald-50 flex items-center justify-center">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1f8a5e" strokeWidth="1.8" strokeLinecap="round" className="w-[22px] h-[22px]">
+        {children}
+      </svg>
+    </div>
+  );
+}
 
 export default function Course() {
   return (
@@ -48,9 +75,9 @@ export default function Course() {
             {FEATURES.map((f, i) => (
               <div
                 key={i}
-                className={`flex items-center gap-3 py-3.5 ${i < FEATURES.length - 1 ? "border-b border-slate-200" : ""}`}
+                className={`flex items-center gap-3.5 py-3.5 ${i < FEATURES.length - 1 ? "border-b border-slate-200" : ""}`}
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" className="flex-shrink-0">{f.icon}</svg>
+                <FeatureIcon>{f.icon}</FeatureIcon>
                 <div>
                   <span className="font-bold text-slate-900">{f.title}</span>
                   <span className="text-slate-500"> — {f.desc}</span>
@@ -71,11 +98,11 @@ export default function Course() {
           </div>
         </div>
 
-        <div className="w-full lg:w-[340px] flex-shrink-0">
+        <div className="w-full lg:w-[420px] flex-shrink-0">
           <img
             src={PREVIEW_IMAGE}
             alt="превью содержимого Xmind файла"
-            className="w-full aspect-[4/3] object-cover object-top rounded-2xl border border-slate-200"
+            className="w-full aspect-[2324/1080] object-contain rounded-2xl border border-slate-200 bg-slate-50"
           />
         </div>
       </div>
