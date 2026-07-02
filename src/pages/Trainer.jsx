@@ -77,7 +77,7 @@ export default function Trainer() {
   if (screen === "home") {
     return (
       <div className="relative overflow-hidden">
-        <GreenBlob className="right-0 inset-y-0 w-[26rem] opacity-70 hidden lg:block" />
+        <GreenBlob className="fixed right-0 top-0 h-screen w-[26rem] opacity-70 hidden lg:block" />
         <div className="relative max-w-6xl mx-auto p-4 py-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           <div className="mb-8">
@@ -305,7 +305,7 @@ export function GreenBlob({ className = "" }) {
       viewBox="0 0 100 100"
       preserveAspectRatio="none"
       aria-hidden="true"
-      className={`absolute pointer-events-none ${className}`}
+      className={`pointer-events-none ${className}`}
     >
       <path d="M100 0 C88 5 78 20 88 37 C100 57 78 65 82 82 C88 100 70 100 70 100 L100 100 Z" fill="#8fe0a3" />
     </svg>

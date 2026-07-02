@@ -22,7 +22,7 @@ const TELEGRAM_CONTACT = "https://t.me/prostayageo";
 export default function About() {
   return (
     <div className="relative overflow-hidden">
-      <GreenBlob className="right-0 inset-y-0 w-[28rem] opacity-70 hidden lg:block" />
+      <GreenBlob className="fixed right-0 top-0 h-screen w-[28rem] opacity-70 hidden lg:block" />
       <div className="relative max-w-6xl mx-auto p-4 py-10">
       <p className="text-emerald-700 font-semibold tracking-wide text-sm uppercase">SimpleGeo</p>
 
