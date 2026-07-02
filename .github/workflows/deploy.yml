@@ -28,6 +28,19 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
           AWS_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt
         run: |
+          # Хэшированные assets (JS/CSS) можно кэшировать надолго — имя файла
+          # меняется при каждой правке, старое имя больше никогда не переиспользуется.
           aws s3 sync ./dist s3://${{ secrets.S3_BUCKET }} \
             --endpoint-url ${{ secrets.S3_ENDPOINT }} \
-            --delete
+            --delete \
+            --exclude "index.html" \
+            --cache-control "public, max-age=31536000, immutable"
+
+          # index.html — точка входа SPA, её отдаёт хостинг на ЛЮБОЙ вложенный
+          # маршрут (/tasks, /about, /course). Без no-cache промежуточные кэши
+          # держат её "свежей" эвристически часами и подсовывают ссылки на уже
+          # удалённые (пересобранные) JS/CSS — из-за этого белый экран при
+          # обновлении страницы.
+          aws s3 cp ./dist/index.html s3://${{ secrets.S3_BUCKET }}/index.html \
+            --endpoint-url ${{ secrets.S3_ENDPOINT }} \
+            --cache-control "no-cache, no-store, must-revalidate"
