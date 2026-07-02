@@ -20,6 +20,8 @@ jobs:
           node-version: 20
       - run: npm ci
       - run: npm run build
+      - name: Update CA certificates
+        run: sudo apt-get update && sudo apt-get install -y ca-certificates && sudo update-ca-certificates
       - name: Upload dist to Selectel S3
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.S3_KEY_ID }}
