@@ -148,7 +148,10 @@ export default function Trainer() {
               <p className="font-semibold text-slate-900 mb-1">Полный гайд по решению заданий ОГЭ</p>
               <p className="text-sm text-slate-600 leading-relaxed mb-3">Mind map по всем заданиям, примеры решений и лайфхаки.</p>
               <div className="flex items-center justify-between">
-                <p className="text-lg font-bold text-slate-900">699 ₽</p>
+                <p className="flex items-baseline gap-2">
+                  <span className="text-lg font-bold text-slate-900">699 ₽</span>
+                  <span className="text-sm text-slate-400 line-through">999 ₽</span>
+                </p>
                 <p className="text-sm text-emerald-700 font-medium">Подробнее →</p>
               </div>
             </div>

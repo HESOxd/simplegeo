@@ -40,6 +40,7 @@ const FEATURES = [
   },
 ];
 const PRICE = "699 ₽";
+const OLD_PRICE = "999 ₽";
 const TELEGRAM_SIGNUP = "https://t.me/prostayageo";
 const PREVIEW_IMAGE = "/course-preview.jpg";
 
@@ -89,7 +90,10 @@ export default function Course() {
           <div className="mt-8 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
             <div>
               <p className="text-sm text-slate-500">Стоимость</p>
-              <p className="text-3xl font-bold text-slate-900">{PRICE}</p>
+              <p className="flex items-baseline gap-2">
+                <span className="text-3xl font-bold text-slate-900">{PRICE}</span>
+                <span className="text-lg text-slate-400 line-through">{OLD_PRICE}</span>
+              </p>
             </div>
             <a href={TELEGRAM_SIGNUP} target="_blank" rel="noopener noreferrer"
               className="text-center bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-6 py-3.5 rounded-xl transition-colors">
