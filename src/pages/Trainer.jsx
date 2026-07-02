@@ -3,6 +3,16 @@ import { Link } from "react-router-dom";
 import { TASKS, SECTIONS } from "../data.js";
 import { norm, shuffle, isTaskRight } from "../utils.js";
 
+const SECTION_ICONS = {
+  "1": "🧭",
+  "2": "🗺️",
+  "3": "🪐",
+  "4": "⛰️",
+  "5": "🌎",
+  "6": "🌪️",
+  "7": "🏭",
+};
+
 export default function Trainer() {
   const [screen, setScreen] = useState("home"); // home | quiz | result
   const [section, setSection] = useState("all");
@@ -21,6 +31,7 @@ export default function Trainer() {
     const present = [...new Set(TASKS.map((t) => t.sec))].sort();
     return present.map((s) => ({ id: s, name: SECTIONS[s] || "Раздел " + s, n: TASKS.filter((t) => t.sec === s).length }));
   }, []);
+  const maxSectionCount = useMemo(() => Math.max(...sectionList.map((s) => s.n)), [sectionList]);
 
   function start() {
     let pool = section === "all" ? TASKS : TASKS.filter((t) => t.sec === section);
@@ -82,12 +93,25 @@ export default function Trainer() {
           </Link>
 
           <p className="text-sm font-medium text-slate-700 mb-2">Раздел</p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-6">
-            <Chip active={section === "all"} onClick={() => setSection("all")}>Все разделы</Chip>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
+            <SectionCard
+              active={section === "all"}
+              onClick={() => setSection("all")}
+              icon="🌍"
+              name="Все разделы"
+              n={TASKS.length}
+              max={TASKS.length}
+            />
             {sectionList.map((s) => (
-              <Chip key={s.id} active={section === s.id} onClick={() => setSection(s.id)}>
-                {s.name} <span className="opacity-50">· {s.n}</span>
-              </Chip>
+              <SectionCard
+                key={s.id}
+                active={section === s.id}
+                onClick={() => setSection(s.id)}
+                icon={SECTION_ICONS[s.id] || "📍"}
+                name={s.name}
+                n={s.n}
+                max={maxSectionCount}
+              />
             ))}
           </div>
 
@@ -273,5 +297,29 @@ export function Chip({ active, onClick, children }) {
       className={`px-3.5 py-2 rounded-full text-sm font-medium border transition-colors ${
         active ? "bg-emerald-600 text-white border-emerald-600" : "bg-white text-slate-700 border-slate-300 hover:border-emerald-400"
       }`}>{children}</button>
+  );
+}
+
+function SectionCard({ active, onClick, icon, name, n, max }) {
+  const pct = max ? Math.round((n / max) * 100) : 0;
+  return (
+    <button
+      onClick={onClick}
+      className={`h-full text-left p-3.5 rounded-xl border transition-colors ${
+        active ? "bg-emerald-600 border-emerald-600" : "bg-white border-slate-200 hover:border-emerald-400"
+      }`}
+    >
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-xl leading-none">{icon}</span>
+        <span className={`text-xs font-semibold ${active ? "text-emerald-100" : "text-slate-400"}`}>{n}</span>
+      </div>
+      <p className={`text-sm font-medium leading-snug ${active ? "text-white" : "text-slate-800"}`}>{name}</p>
+      <div className={`mt-2.5 h-1 rounded-full overflow-hidden ${active ? "bg-emerald-800/40" : "bg-slate-100"}`}>
+        <div
+          className={`h-full rounded-full ${active ? "bg-white" : "bg-emerald-500"}`}
+          style={{ width: `${Math.max(pct, 6)}%` }}
+        />
+      </div>
+    </button>
   );
 }
