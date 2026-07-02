@@ -1,4 +1,5 @@
 import React from "react";
+import { GreenBlob } from "./Trainer.jsx";
 
 // ─────────────────────────────────────────────────────────
 // ЗАМЕНИ ЗДЕСЬ СВОЙ ТЕКСТ И ССЫЛКИ. Ищи пометки TODO.
@@ -20,12 +21,14 @@ const TELEGRAM_CONTACT = "https://t.me/prostayageo";
 
 export default function About() {
   return (
-    <div className="max-w-6xl mx-auto p-4 py-10">
+    <div className="relative overflow-hidden">
+      <GreenBlob className="right-0 top-0 h-[560px] w-64 opacity-70 hidden lg:block" />
+      <div className="relative max-w-6xl mx-auto p-4 py-10">
       <p className="text-emerald-700 font-semibold tracking-wide text-sm uppercase">SimpleGeo</p>
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 mt-4">
         <div className="lg:col-span-3">
-          <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 leading-tight">Юрий</h1>
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-slate-900 leading-tight" style={{ fontFamily: "'Unbounded', sans-serif" }}>Юрий</h1>
           <p className="text-lg text-slate-500 mt-2">Репетитор по географии, ОГЭ/ЕГЭ</p>
           <div className="mt-6 max-w-2xl space-y-4">
             {BIO.map((paragraph, i) => (
@@ -63,6 +66,7 @@ export default function About() {
             </div>
           )}
         </div>
+      </div>
       </div>
     </div>
   );

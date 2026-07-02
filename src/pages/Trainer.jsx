@@ -76,11 +76,13 @@ export default function Trainer() {
   // ── ГЛАВНЫЙ ЭКРАН ──
   if (screen === "home") {
     return (
-      <div className="max-w-6xl mx-auto p-4 py-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="relative overflow-hidden">
+        <GreenBlob className="right-0 top-0 h-[520px] w-56 opacity-70 hidden lg:block" />
+        <div className="relative max-w-6xl mx-auto p-4 py-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           <div className="mb-8">
             <p className="text-emerald-700 font-semibold tracking-wide text-sm uppercase">ОГЭ · География</p>
-            <h1 className="text-3xl font-bold text-slate-900 mt-1">Тренажёр по разделам</h1>
+            <h1 className="text-3xl font-extrabold text-slate-900 mt-1" style={{ fontFamily: "'Unbounded', sans-serif" }}>Тренажёр по разделам</h1>
             <p className="text-slate-500 mt-2">Банк ФИПИ, {TASKS.length} заданий. Выбери раздел и число вопросов.</p>
           </div>
 
@@ -146,6 +148,7 @@ export default function Trainer() {
             <p className="text-lg font-bold text-slate-900">699 ₽</p>
             <p className="text-sm text-emerald-700 font-medium mt-2">Подробнее о курсе →</p>
           </Link>
+        </div>
         </div>
       </div>
     );
@@ -285,6 +288,19 @@ export function TaskCard({ task, answered, right, single, setSingle, multi, togg
         </div>
       )}
     </div>
+  );
+}
+
+export function GreenBlob({ className = "" }) {
+  return (
+    <svg
+      viewBox="0 0 100 100"
+      preserveAspectRatio="none"
+      aria-hidden="true"
+      className={`absolute pointer-events-none ${className}`}
+    >
+      <path d="M100 0 C88 5 78 20 88 37 C100 57 78 65 82 82 C88 100 70 100 70 100 L100 100 Z" fill="#8fe0a3" />
+    </svg>
   );
 }
 
