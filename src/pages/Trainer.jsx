@@ -232,7 +232,10 @@ export function TaskCard({ task, answered, right, single, setSingle, multi, togg
             } else if (i === single) s = "border-emerald-500 bg-emerald-50";
             return (
               <button key={i} disabled={answered} onClick={() => setSingle(i)}
-                className={`w-full text-left px-4 py-3 rounded-xl border-2 transition-colors text-slate-800 ${s}`}>{opt}</button>
+                className={`w-full text-left px-4 py-3 rounded-xl border-2 transition-colors text-slate-800 flex items-start gap-3 ${s}`}>
+                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-slate-100 text-slate-500 text-sm font-semibold flex items-center justify-center">{i + 1}</span>
+                <span>{opt}</span>
+              </button>
             );
           })}
         </div>
@@ -251,6 +254,7 @@ export function TaskCard({ task, answered, right, single, setSingle, multi, togg
             return (
               <button key={i} disabled={answered} onClick={() => toggleMulti(i)}
                 className={`w-full text-left px-4 py-3 rounded-xl border-2 transition-colors text-slate-800 flex items-center gap-3 ${s}`}>
+                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-slate-100 text-slate-500 text-sm font-semibold flex items-center justify-center">{i + 1}</span>
                 <span className={`w-5 h-5 rounded border flex-shrink-0 ${picked ? "bg-emerald-600 border-emerald-600" : "border-slate-400"}`} />
                 {opt}
               </button>
