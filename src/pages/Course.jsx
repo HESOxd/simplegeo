@@ -39,6 +39,7 @@ const FEATURES = [
     ),
   },
 ];
+const COURSE_TITLE = "Полный гайд по решению заданий ОГЭ";
 const PRICE = "699 ₽";
 const OLD_PRICE = "999 ₽";
 const TELEGRAM_SIGNUP = "https://t.me/prostayageo";
@@ -59,12 +60,8 @@ export default function Course() {
     <div className="max-w-6xl mx-auto p-4 py-10">
       <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-10 flex flex-col lg:flex-row gap-10 justify-between">
         <div className="flex-1 max-w-xl">
-          <span className="inline-flex items-center gap-2 bg-[#1f8a5e] text-white text-xs font-bold tracking-wide uppercase px-3.5 py-1.5 rounded-lg">
-            Тесты
-          </span>
-
           <h1
-            className="font-extrabold text-3xl sm:text-4xl leading-[1.15] text-slate-900 mt-4"
+            className="font-extrabold text-3xl sm:text-4xl leading-[1.15] text-slate-900"
             style={{ fontFamily: "'Unbounded', sans-serif" }}
           >
             {COURSE_NAME}
@@ -91,7 +88,7 @@ export default function Course() {
             <div>
               <p className="text-sm text-slate-500">Стоимость</p>
               <p className="flex items-baseline gap-2">
-                <span className="text-3xl font-bold text-slate-900">{PRICE}</span>
+                <span className="text-3xl font-bold text-emerald-600">{PRICE}</span>
                 <span className="text-lg text-slate-400 line-through">{OLD_PRICE}</span>
               </p>
             </div>
@@ -108,6 +105,33 @@ export default function Course() {
             alt="превью содержимого Xmind файла"
             className="w-full aspect-[2324/1080] object-contain rounded-2xl border border-slate-200 bg-slate-50"
           />
+        </div>
+      </div>
+
+      <div className="mt-12">
+        <h2
+          className="font-extrabold text-2xl sm:text-3xl text-slate-900"
+          style={{ fontFamily: "'Unbounded', sans-serif" }}
+        >
+          КУРСЫ
+        </h2>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-6">
+          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+            <img
+              src={PREVIEW_IMAGE}
+              alt="обложка курса — Полный гайд по решению заданий ОГЭ"
+              className="w-full aspect-[2324/1080] object-contain bg-slate-50"
+            />
+            <div className="p-5">
+              <p className="font-bold text-slate-900">{COURSE_TITLE}</p>
+              <p className="text-sm text-slate-500 mt-1">Xmind файл с разбором заданий</p>
+              <div className="flex items-baseline gap-2 mt-3">
+                <span className="text-lg font-bold text-emerald-600">{PRICE}</span>
+                <span className="text-sm text-slate-400 line-through">{OLD_PRICE}</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
