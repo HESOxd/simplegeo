@@ -1,8 +1,10 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-// base: "./" — чтобы сайт работал из любой папки на хостинге (важно для S3).
+// base: "/" — абсолютные пути к ассетам, иначе при обновлении вложенных
+// маршрутов (/tasks, /about, ...) относительные пути ("./assets/...")
+// резолвятся от текущего URL, а не от корня, и JS не грузится.
 export default defineConfig({
   plugins: [react()],
-  base: "./",
+  base: "/",
 });
