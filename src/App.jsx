@@ -26,11 +26,17 @@ function TopNav() {
               <Link
                 key={item.to}
                 to={item.to}
-                className={`flex-1 sm:flex-none px-1 sm:px-4 text-center text-sm font-medium py-3.5 border-b-2 transition-colors whitespace-nowrap ${
-                  active ? "border-lime-600 text-lime-700" : "border-transparent text-slate-500 hover:text-slate-800"
+                className={`relative flex-1 sm:flex-none px-1 sm:px-4 text-center text-sm font-medium py-3.5 transition-colors whitespace-nowrap ${
+                  active ? "text-slate-900" : "text-slate-500 hover:text-slate-800"
                 }`}
               >
                 {item.label}
+                {active && (
+                  <span
+                    className="absolute left-0 right-0 -bottom-px h-[3px] rounded-full"
+                    style={{ background: "linear-gradient(90deg, #d4f83a, #7cb518)" }}
+                  />
+                )}
               </Link>
             );
           })}

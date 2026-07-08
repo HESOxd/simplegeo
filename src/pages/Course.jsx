@@ -1,4 +1,5 @@
 import React from "react";
+import { GRADIENT_TEXT } from "./Trainer.jsx";
 
 // ─────────────────────────────────────────────────────────
 // ЗАМЕНИ ЗДЕСЬ СВОЙ ТЕКСТ И ССЫЛКИ. Ищи пометки TODO.
@@ -41,7 +42,7 @@ export default function Course() {
                   <span className="text-lg font-bold text-lime-600">{PRICE}</span>
                   <span className="text-sm text-slate-400 line-through">{OLD_PRICE}</span>
                 </p>
-                <span className="text-sm text-lime-700 font-medium">Подробнее →</span>
+                <span className="text-sm font-medium" style={GRADIENT_TEXT}>Подробнее →</span>
               </div>
             </div>
           </a>

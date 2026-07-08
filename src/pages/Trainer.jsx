@@ -3,6 +3,13 @@ import { Link } from "react-router-dom";
 import { TASKS, SECTIONS } from "../data.js";
 import { norm, shuffle, isTaskRight } from "../utils.js";
 
+export const GRADIENT_TEXT = {
+  backgroundImage: "linear-gradient(90deg, #8fd91c, #4d7c0f)",
+  WebkitBackgroundClip: "text",
+  backgroundClip: "text",
+  color: "transparent",
+};
+
 const SECTION_ICONS = {
   "1": "🧭",
   "2": "🗺️",
@@ -132,7 +139,7 @@ export default function Trainer() {
             ))}
           </div>
 
-          <button onClick={start} className="w-full bg-lime-400 hover:bg-lime-500 text-slate-900 font-semibold py-3.5 rounded-xl transition-colors">
+          <button onClick={start} className="w-full bg-gradient-to-r from-lime-300 to-lime-500 hover:from-lime-400 hover:to-lime-600 text-slate-900 font-semibold py-3.5 rounded-xl transition-colors">
             Начать
           </button>
         </div>
@@ -147,7 +154,7 @@ export default function Trainer() {
               </div>
             </div>
             <p className="text-sm text-slate-600 leading-relaxed">3 года преподаю, 100+ учеников, средний балл на ОГЭ — 4,7.</p>
-            <p className="text-sm text-lime-700 font-medium mt-3">Узнать больше →</p>
+            <p className="text-sm font-medium mt-3" style={GRADIENT_TEXT}>Узнать больше →</p>
           </Link>
 
           <Link to="/course" className="block bg-white rounded-2xl border border-slate-200 overflow-hidden hover:border-lime-300 transition-colors">
@@ -160,7 +167,7 @@ export default function Trainer() {
                   <span className="text-lg font-bold text-slate-900">699 ₽</span>
                   <span className="text-sm text-slate-400 line-through">999 ₽</span>
                 </p>
-                <p className="text-sm text-lime-700 font-medium">Подробнее →</p>
+                <p className="text-sm font-medium" style={GRADIENT_TEXT}>Подробнее →</p>
               </div>
             </div>
           </Link>
@@ -181,7 +188,7 @@ export default function Trainer() {
           <p className="mt-3 text-6xl font-bold text-slate-900">{correctCount}<span className="text-2xl text-slate-400">/{deck.length}</span></p>
           <p className="mt-1 text-lg text-slate-500">{pct}% верных · {verdict}</p>
           <div className="mt-8 flex gap-3">
-            <button onClick={start} className="flex-1 bg-lime-400 hover:bg-lime-500 text-slate-900 font-semibold py-3 rounded-xl transition-colors">Ещё раз</button>
+            <button onClick={start} className="flex-1 bg-gradient-to-r from-lime-300 to-lime-500 hover:from-lime-400 hover:to-lime-600 text-slate-900 font-semibold py-3 rounded-xl transition-colors">Ещё раз</button>
             <button onClick={() => setScreen("home")} className="flex-1 bg-white border border-slate-300 hover:bg-slate-50 text-slate-800 font-semibold py-3 rounded-xl transition-colors">В меню</button>
           </div>
         </div>
@@ -215,7 +222,7 @@ export default function Trainer() {
         {!answered ? (
           <button onClick={check} className="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3 rounded-xl transition-colors">Проверить</button>
         ) : (
-          <button onClick={next} className="w-full bg-lime-400 hover:bg-lime-500 text-slate-900 font-semibold py-3 rounded-xl transition-colors">
+          <button onClick={next} className="w-full bg-gradient-to-r from-lime-300 to-lime-500 hover:from-lime-400 hover:to-lime-600 text-slate-900 font-semibold py-3 rounded-xl transition-colors">
             {pos + 1 < deck.length ? "Дальше" : "Итог"}
           </button>
         )}
@@ -331,31 +338,29 @@ export function Chip({ active, onClick, children }) {
   return (
     <button onClick={onClick}
       className={`px-3.5 py-2 rounded-full text-sm font-medium border transition-colors ${
-        active ? "bg-lime-400 text-slate-900 border-lime-400" : "bg-white text-slate-700 border-slate-300 hover:border-lime-400"
+        active ? "bg-gradient-to-br from-lime-300 to-lime-500 text-slate-900 border-transparent" : "bg-white text-slate-700 border-slate-300 hover:border-lime-400"
       }`}>{children}</button>
   );
 }
 
 function SectionCard({ active, onClick, icon, name, n, max }) {
-  const pct = max ? Math.round((n / max) * 100) : 0;
   return (
     <button
       onClick={onClick}
       className={`h-full text-left p-3.5 rounded-xl border transition-colors ${
-        active ? "bg-lime-400 border-lime-400" : "bg-white border-slate-200 hover:border-lime-400"
+        active ? "bg-gradient-to-br from-lime-300 to-lime-500 border-transparent" : "bg-white border-slate-200 hover:border-lime-400"
       }`}
     >
       <div className="flex items-center justify-between mb-2">
         <span className="text-xl leading-none">{icon}</span>
         <span className={`text-xs font-semibold ${active ? "text-slate-700" : "text-slate-400"}`}>{n}</span>
       </div>
-      <p className={`text-sm font-medium leading-snug ${active ? "text-slate-900" : "text-slate-800"}`}>{name}</p>
-      <div className={`mt-2.5 h-1 rounded-full overflow-hidden ${active ? "bg-white/50" : "bg-slate-100"}`}>
-        <div
-          className={`h-full rounded-full ${active ? "bg-slate-900" : "bg-lime-500"}`}
-          style={{ width: `${Math.max(pct, 6)}%` }}
-        />
-      </div>
+      <p
+        className={`text-sm leading-snug ${active ? "text-slate-900" : "text-slate-800"}`}
+        style={{ fontFamily: "'Unbounded', sans-serif", fontWeight: 700 }}
+      >
+        {name}
+      </p>
     </button>
   );
 }
