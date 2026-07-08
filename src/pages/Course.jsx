@@ -1,5 +1,4 @@
 import React from "react";
-import { GreenBlob } from "./Trainer.jsx";
 
 // ─────────────────────────────────────────────────────────
 // ЗАМЕНИ ЗДЕСЬ СВОЙ ТЕКСТ И ССЫЛКИ. Ищи пометки TODO.
@@ -14,7 +13,6 @@ const PREVIEW_IMAGE = "/course-preview.jpg";
 export default function Course() {
   return (
     <div className="relative overflow-hidden">
-      <GreenBlob className="fixed right-0 top-0 h-screen w-[28rem] opacity-70 hidden lg:block" />
       <div className="relative max-w-6xl mx-auto p-4 py-10">
         <h1
           className="font-extrabold text-2xl sm:text-3xl text-slate-900"
