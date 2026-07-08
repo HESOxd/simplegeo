@@ -35,7 +35,7 @@ export default function About() {
           <div className="grid grid-cols-3 gap-4 mt-10 max-w-lg">
             {EXPERIENCE.map((e, i) => (
               <div key={i}>
-                <p className="text-3xl sm:text-4xl font-bold text-lime-700">{e.number}</p>
+                <p className="text-3xl sm:text-4xl font-bold text-green-700">{e.number}</p>
                 <p className="text-sm text-slate-500 mt-1">{e.label}</p>
               </div>
             ))}
@@ -57,7 +57,7 @@ export default function About() {
           {PHOTO_URL ? (
             <img src={PHOTO_URL} alt="Фото преподавателя" className="w-full aspect-[4/5] object-cover rounded-2xl border border-slate-200" />
           ) : (
-            <div className="w-full aspect-[4/5] rounded-2xl bg-lime-50 border border-lime-100 flex items-center justify-center text-lime-600 text-6xl font-bold">
+            <div className="w-full aspect-[4/5] rounded-2xl bg-green-50 border border-green-100 flex items-center justify-center text-green-600 text-6xl font-bold">
               Ю
             </div>
           )}

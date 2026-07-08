@@ -34,7 +34,7 @@ function TopNav() {
                 {active && (
                   <span
                     className="absolute left-0 right-0 -bottom-px h-[3px] rounded-full"
-                    style={{ background: "linear-gradient(90deg, #d4f83a, #7cb518)" }}
+                    style={{ background: "linear-gradient(90deg, #86efac, #16a34a)" }}
                   />
                 )}
               </Link>
