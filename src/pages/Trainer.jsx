@@ -86,7 +86,8 @@ export default function Trainer() {
 
           <Link
             to="/tasks/variant"
-            className="flex items-start justify-between gap-4 mb-8 bg-slate-900 hover:bg-slate-800 text-white rounded-xl p-4 transition-colors"
+            className="flex items-start justify-between gap-4 mb-8 text-white rounded-xl p-4 transition-colors hover:opacity-90"
+            style={{ backgroundColor: "#131A29" }}
           >
             <div>
               <p className="font-semibold">Собрать полный вариант — 30 заданий</p>
