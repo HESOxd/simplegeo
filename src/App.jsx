@@ -51,8 +51,7 @@ export default function App() {
     <div
       className="min-h-screen"
       style={{
-        background:
-          "radial-gradient(ellipse 110% 90% at 20% -10%, #d4f83a 0%, #e2f97a 22%, #eefab8 42%, #f7fce0 62%, #ffffff 85%)",
+        background: "linear-gradient(to top right, #bfe8b4 0%, #e3f5da 45%, #ffffff 75%)",
       }}
     >
       <TopNav />
