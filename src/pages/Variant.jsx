@@ -83,7 +83,7 @@ export default function Variant() {
             каждого ответа: что верно, что нет, и как правильно.
           </p>
         </div>
-        <button onClick={start} className="w-full bg-gradient-to-r from-green-300 to-green-500 hover:from-green-400 hover:to-green-600 text-slate-900 font-semibold py-3.5 rounded-xl transition-colors">
+        <button onClick={start} className="w-full bg-gradient-to-r from-green-200 to-green-400 hover:from-green-300 hover:to-green-500 text-slate-900 font-semibold py-3.5 rounded-xl transition-colors">
           Начать вариант
         </button>
       </Shell>
@@ -125,7 +125,7 @@ export default function Variant() {
         </div>
 
         <div className="mt-8 flex gap-3">
-          <button onClick={start} className="flex-1 bg-gradient-to-r from-green-300 to-green-500 hover:from-green-400 hover:to-green-600 text-slate-900 font-semibold py-3 rounded-xl transition-colors">Новый вариант</button>
+          <button onClick={start} className="flex-1 bg-gradient-to-r from-green-200 to-green-400 hover:from-green-300 hover:to-green-500 text-slate-900 font-semibold py-3 rounded-xl transition-colors">Новый вариант</button>
           <Link to="/tasks" className="flex-1 text-center bg-white border border-slate-300 hover:bg-slate-50 text-slate-800 font-semibold py-3 rounded-xl transition-colors">К тренажёру</Link>
         </div>
       </Shell>
@@ -158,7 +158,7 @@ export default function Variant() {
         {!answered ? (
           <button onClick={check} className="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3 rounded-xl transition-colors">Проверить</button>
         ) : (
-          <button onClick={next} className="w-full bg-gradient-to-r from-green-300 to-green-500 hover:from-green-400 hover:to-green-600 text-slate-900 font-semibold py-3 rounded-xl transition-colors">
+          <button onClick={next} className="w-full bg-gradient-to-r from-green-200 to-green-400 hover:from-green-300 hover:to-green-500 text-slate-900 font-semibold py-3 rounded-xl transition-colors">
             {pos + 1 < deck.length ? "Дальше" : "К разбору"}
           </button>
         )}

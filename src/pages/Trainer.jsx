@@ -139,7 +139,7 @@ export default function Trainer() {
             ))}
           </div>
 
-          <button onClick={start} className="w-full bg-gradient-to-r from-green-300 to-green-500 hover:from-green-400 hover:to-green-600 text-slate-900 font-semibold py-3.5 rounded-xl transition-colors">
+          <button onClick={start} className="w-full bg-gradient-to-r from-green-200 to-green-400 hover:from-green-300 hover:to-green-500 text-slate-900 font-semibold py-3.5 rounded-xl transition-colors">
             Начать
           </button>
         </div>
@@ -188,7 +188,7 @@ export default function Trainer() {
           <p className="mt-3 text-6xl font-bold text-slate-900">{correctCount}<span className="text-2xl text-slate-400">/{deck.length}</span></p>
           <p className="mt-1 text-lg text-slate-500">{pct}% верных · {verdict}</p>
           <div className="mt-8 flex gap-3">
-            <button onClick={start} className="flex-1 bg-gradient-to-r from-green-300 to-green-500 hover:from-green-400 hover:to-green-600 text-slate-900 font-semibold py-3 rounded-xl transition-colors">Ещё раз</button>
+            <button onClick={start} className="flex-1 bg-gradient-to-r from-green-200 to-green-400 hover:from-green-300 hover:to-green-500 text-slate-900 font-semibold py-3 rounded-xl transition-colors">Ещё раз</button>
             <button onClick={() => setScreen("home")} className="flex-1 bg-white border border-slate-300 hover:bg-slate-50 text-slate-800 font-semibold py-3 rounded-xl transition-colors">В меню</button>
           </div>
         </div>
@@ -222,7 +222,7 @@ export default function Trainer() {
         {!answered ? (
           <button onClick={check} className="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3 rounded-xl transition-colors">Проверить</button>
         ) : (
-          <button onClick={next} className="w-full bg-gradient-to-r from-green-300 to-green-500 hover:from-green-400 hover:to-green-600 text-slate-900 font-semibold py-3 rounded-xl transition-colors">
+          <button onClick={next} className="w-full bg-gradient-to-r from-green-200 to-green-400 hover:from-green-300 hover:to-green-500 text-slate-900 font-semibold py-3 rounded-xl transition-colors">
             {pos + 1 < deck.length ? "Дальше" : "Итог"}
           </button>
         )}
@@ -338,7 +338,7 @@ export function Chip({ active, onClick, children }) {
   return (
     <button onClick={onClick}
       className={`px-3.5 py-2 rounded-full text-sm font-medium border transition-colors ${
-        active ? "bg-gradient-to-br from-green-300 to-green-500 text-slate-900 border-transparent" : "bg-white text-slate-700 border-slate-300 hover:border-green-400"
+        active ? "bg-gradient-to-br from-green-200 to-green-400 text-slate-900 border-transparent" : "bg-white text-slate-700 border-slate-300 hover:border-green-400"
       }`}>{children}</button>
   );
 }
@@ -348,7 +348,7 @@ function SectionCard({ active, onClick, icon, name, n, max }) {
     <button
       onClick={onClick}
       className={`h-full text-left p-3.5 rounded-xl border transition-colors ${
-        active ? "bg-gradient-to-br from-green-300 to-green-500 border-transparent" : "bg-white border-slate-200 hover:border-green-400"
+        active ? "bg-gradient-to-br from-green-200 to-green-400 border-transparent" : "bg-white border-slate-200 hover:border-green-400"
       }`}
     >
       <div className="flex items-center justify-between mb-2">
