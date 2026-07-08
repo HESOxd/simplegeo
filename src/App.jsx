@@ -27,7 +27,7 @@ function TopNav() {
                 key={item.to}
                 to={item.to}
                 className={`flex-1 sm:flex-none px-1 sm:px-4 text-center text-sm font-medium py-3.5 border-b-2 transition-colors whitespace-nowrap ${
-                  active ? "border-emerald-600 text-emerald-700" : "border-transparent text-slate-500 hover:text-slate-800"
+                  active ? "border-lime-600 text-lime-700" : "border-transparent text-slate-500 hover:text-slate-800"
                 }`}
               >
                 {item.label}

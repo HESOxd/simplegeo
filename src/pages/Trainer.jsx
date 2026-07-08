@@ -85,14 +85,21 @@ export default function Trainer() {
 
           <Link
             to="/tasks/variant"
-            className="flex items-start justify-between gap-4 mb-8 text-white rounded-xl p-4 transition-colors hover:opacity-90"
+            className="block mb-8 text-white rounded-xl p-4 transition-colors hover:opacity-90"
             style={{ backgroundColor: "#131A29" }}
           >
-            <div>
-              <p className="font-semibold">Собрать полный вариант — 30 заданий</p>
-              <p className="text-sm text-slate-300 mt-0.5">Как на настоящем экзамене, без таймера, с разбором ошибок</p>
+            <div className="flex items-center gap-1.5 mb-3">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
             </div>
-            <img src="/favicon.png" alt="" className="w-8 h-8 rounded-lg flex-shrink-0" />
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="font-semibold">Собрать полный вариант — 30 заданий</p>
+                <p className="text-sm text-slate-300 mt-0.5">Как на настоящем экзамене, без таймера, с разбором ошибок</p>
+              </div>
+              <img src="/favicon.png" alt="" className="w-8 h-8 rounded-lg flex-shrink-0" />
+            </div>
           </Link>
 
           <p className="text-sm font-medium text-slate-700 mb-2">Раздел</p>
@@ -125,25 +132,25 @@ export default function Trainer() {
             ))}
           </div>
 
-          <button onClick={start} className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3.5 rounded-xl transition-colors">
+          <button onClick={start} className="w-full bg-lime-400 hover:bg-lime-500 text-slate-900 font-semibold py-3.5 rounded-xl transition-colors">
             Начать
           </button>
         </div>
 
         <div className="flex flex-col gap-4 lg:sticky lg:top-6 lg:self-start">
-          <Link to="/about" className="block bg-white rounded-2xl border border-slate-200 p-5 hover:border-emerald-300 transition-colors">
+          <Link to="/about" className="block bg-white rounded-2xl border border-slate-200 p-5 hover:border-lime-300 transition-colors">
             <div className="flex items-center gap-3 mb-3">
-              <img src="/photo.jpg" alt="Юрий" className="w-12 h-12 rounded-full object-cover border-2 border-emerald-100" />
+              <img src="/photo.jpg" alt="Юрий" className="w-12 h-12 rounded-full object-cover border-2 border-lime-100" />
               <div>
                 <p className="font-semibold text-slate-900">Юрий</p>
                 <p className="text-xs text-slate-500">Репетитор по географии</p>
               </div>
             </div>
             <p className="text-sm text-slate-600 leading-relaxed">3 года преподаю, 100+ учеников, средний балл на ОГЭ — 4,7.</p>
-            <p className="text-sm text-emerald-700 font-medium mt-3">Узнать больше →</p>
+            <p className="text-sm text-lime-700 font-medium mt-3">Узнать больше →</p>
           </Link>
 
-          <Link to="/course" className="block bg-white rounded-2xl border border-slate-200 overflow-hidden hover:border-emerald-300 transition-colors">
+          <Link to="/course" className="block bg-white rounded-2xl border border-slate-200 overflow-hidden hover:border-lime-300 transition-colors">
             <img src="/course-preview.jpg" alt="Полный гайд по решению заданий ОГЭ" className="w-full aspect-video object-contain bg-slate-50 border-b border-slate-100" />
             <div className="p-5">
               <p className="font-semibold text-slate-900 mb-1">Полный гайд по решению заданий ОГЭ</p>
@@ -153,7 +160,7 @@ export default function Trainer() {
                   <span className="text-lg font-bold text-slate-900">699 ₽</span>
                   <span className="text-sm text-slate-400 line-through">999 ₽</span>
                 </p>
-                <p className="text-sm text-emerald-700 font-medium">Подробнее →</p>
+                <p className="text-sm text-lime-700 font-medium">Подробнее →</p>
               </div>
             </div>
           </Link>
@@ -170,11 +177,11 @@ export default function Trainer() {
     return (
       <Shell>
         <div className="text-center py-6">
-          <p className="text-sm font-semibold uppercase tracking-wide text-emerald-700">Результат</p>
+          <p className="text-sm font-semibold uppercase tracking-wide text-lime-700">Результат</p>
           <p className="mt-3 text-6xl font-bold text-slate-900">{correctCount}<span className="text-2xl text-slate-400">/{deck.length}</span></p>
           <p className="mt-1 text-lg text-slate-500">{pct}% верных · {verdict}</p>
           <div className="mt-8 flex gap-3">
-            <button onClick={start} className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl transition-colors">Ещё раз</button>
+            <button onClick={start} className="flex-1 bg-lime-400 hover:bg-lime-500 text-slate-900 font-semibold py-3 rounded-xl transition-colors">Ещё раз</button>
             <button onClick={() => setScreen("home")} className="flex-1 bg-white border border-slate-300 hover:bg-slate-50 text-slate-800 font-semibold py-3 rounded-xl transition-colors">В меню</button>
           </div>
         </div>
@@ -192,7 +199,7 @@ export default function Trainer() {
           <span>Верно: {correctCount}</span>
         </div>
         <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
-          <div className="h-full bg-emerald-600 transition-all duration-300" style={{ width: `${(pos / deck.length) * 100}%` }} />
+          <div className="h-full bg-lime-500 transition-all duration-300" style={{ width: `${(pos / deck.length) * 100}%` }} />
         </div>
       </div>
 
@@ -208,7 +215,7 @@ export default function Trainer() {
         {!answered ? (
           <button onClick={check} className="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3 rounded-xl transition-colors">Проверить</button>
         ) : (
-          <button onClick={next} className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl transition-colors">
+          <button onClick={next} className="w-full bg-lime-400 hover:bg-lime-500 text-slate-900 font-semibold py-3 rounded-xl transition-colors">
             {pos + 1 < deck.length ? "Дальше" : "Итог"}
           </button>
         )}
@@ -221,7 +228,7 @@ export default function Trainer() {
 export function TaskCard({ task, answered, right, single, setSingle, multi, toggleMulti, text, setText, onCheck }) {
   return (
     <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6">
-      <span className="inline-block text-xs font-semibold text-emerald-700 bg-emerald-50 rounded-full px-2.5 py-1 mb-3">
+      <span className="inline-block text-xs font-semibold text-lime-700 bg-lime-50 rounded-full px-2.5 py-1 mb-3">
         {SECTIONS[task.sec] || "Раздел " + task.sec}
         {task.type === "multi" && " · выбор нескольких"}
         {task.type === "short" && " · впиши ответ"}
@@ -236,12 +243,12 @@ export function TaskCard({ task, answered, right, single, setSingle, multi, togg
       {task.type === "single" && (
         <div className="mt-5 space-y-3">
           {task.options.map((opt, i) => {
-            let s = "border-slate-200 hover:border-emerald-400 hover:bg-emerald-50";
+            let s = "border-slate-200 hover:border-lime-400 hover:bg-lime-50";
             if (answered) {
-              if (i === task.correct) s = "border-emerald-500 bg-emerald-50";
+              if (i === task.correct) s = "border-lime-500 bg-lime-50";
               else if (i === single) s = "border-rose-400 bg-rose-50";
               else s = "border-slate-200 opacity-60";
-            } else if (i === single) s = "border-emerald-500 bg-emerald-50";
+            } else if (i === single) s = "border-lime-500 bg-lime-50";
             return (
               <button key={i} disabled={answered} onClick={() => setSingle(i)}
                 className={`w-full text-left px-4 py-3 rounded-xl border-2 transition-colors text-slate-800 flex items-start gap-3 ${s}`}>
@@ -257,9 +264,9 @@ export function TaskCard({ task, answered, right, single, setSingle, multi, togg
         <div className="mt-5 space-y-3">
           {task.options.map((opt, i) => {
             const picked = multi.includes(i);
-            let s = picked ? "border-emerald-500 bg-emerald-50" : "border-slate-200 hover:border-emerald-400";
+            let s = picked ? "border-lime-500 bg-lime-50" : "border-slate-200 hover:border-lime-400";
             if (answered) {
-              if (task.correct.includes(i)) s = "border-emerald-500 bg-emerald-50";
+              if (task.correct.includes(i)) s = "border-lime-500 bg-lime-50";
               else if (picked) s = "border-rose-400 bg-rose-50";
               else s = "border-slate-200 opacity-60";
             }
@@ -267,7 +274,7 @@ export function TaskCard({ task, answered, right, single, setSingle, multi, togg
               <button key={i} disabled={answered} onClick={() => toggleMulti(i)}
                 className={`w-full text-left px-4 py-3 rounded-xl border-2 transition-colors text-slate-800 flex items-center gap-3 ${s}`}>
                 <span className="flex-shrink-0 w-6 h-6 rounded-full bg-slate-100 text-slate-500 text-sm font-semibold flex items-center justify-center">{i + 1}</span>
-                <span className={`w-5 h-5 rounded border flex-shrink-0 ${picked ? "bg-emerald-600 border-emerald-600" : "border-slate-400"}`} />
+                <span className={`w-5 h-5 rounded border flex-shrink-0 ${picked ? "bg-lime-500 border-lime-500" : "border-slate-400"}`} />
                 {opt}
               </button>
             );
@@ -283,16 +290,16 @@ export function TaskCard({ task, answered, right, single, setSingle, multi, togg
             onKeyDown={(e) => e.key === "Enter" && onCheck()}
             disabled={answered}
             placeholder="Впиши ответ и нажми Проверить"
-            className={`w-full px-4 py-3 rounded-xl border-2 outline-none text-slate-800 ${answered ? (right ? "border-emerald-500 bg-emerald-50" : "border-rose-400 bg-rose-50") : "border-slate-300 focus:border-emerald-500"}`}
+            className={`w-full px-4 py-3 rounded-xl border-2 outline-none text-slate-800 ${answered ? (right ? "border-lime-500 bg-lime-50" : "border-rose-400 bg-rose-50") : "border-slate-300 focus:border-lime-500"}`}
           />
           {answered && !right && (
-            <p className="mt-2 text-sm text-slate-600">Верный ответ: <b className="text-emerald-700">{task.answer}</b></p>
+            <p className="mt-2 text-sm text-slate-600">Верный ответ: <b className="text-lime-700">{task.answer}</b></p>
           )}
         </div>
       )}
 
       {answered && (
-        <div className={`mt-4 text-sm font-medium ${right ? "text-emerald-700" : "text-rose-600"}`}>
+        <div className={`mt-4 text-sm font-medium ${right ? "text-lime-700" : "text-rose-600"}`}>
           {right ? "Верно" : "Неверно"}
         </div>
       )}
@@ -324,7 +331,7 @@ export function Chip({ active, onClick, children }) {
   return (
     <button onClick={onClick}
       className={`px-3.5 py-2 rounded-full text-sm font-medium border transition-colors ${
-        active ? "bg-emerald-600 text-white border-emerald-600" : "bg-white text-slate-700 border-slate-300 hover:border-emerald-400"
+        active ? "bg-lime-400 text-slate-900 border-lime-400" : "bg-white text-slate-700 border-slate-300 hover:border-lime-400"
       }`}>{children}</button>
   );
 }
@@ -335,17 +342,17 @@ function SectionCard({ active, onClick, icon, name, n, max }) {
     <button
       onClick={onClick}
       className={`h-full text-left p-3.5 rounded-xl border transition-colors ${
-        active ? "bg-emerald-600 border-emerald-600" : "bg-white border-slate-200 hover:border-emerald-400"
+        active ? "bg-lime-400 border-lime-400" : "bg-white border-slate-200 hover:border-lime-400"
       }`}
     >
       <div className="flex items-center justify-between mb-2">
         <span className="text-xl leading-none">{icon}</span>
-        <span className={`text-xs font-semibold ${active ? "text-emerald-100" : "text-slate-400"}`}>{n}</span>
+        <span className={`text-xs font-semibold ${active ? "text-slate-700" : "text-slate-400"}`}>{n}</span>
       </div>
-      <p className={`text-sm font-medium leading-snug ${active ? "text-white" : "text-slate-800"}`}>{name}</p>
-      <div className={`mt-2.5 h-1 rounded-full overflow-hidden ${active ? "bg-emerald-800/40" : "bg-slate-100"}`}>
+      <p className={`text-sm font-medium leading-snug ${active ? "text-slate-900" : "text-slate-800"}`}>{name}</p>
+      <div className={`mt-2.5 h-1 rounded-full overflow-hidden ${active ? "bg-white/50" : "bg-slate-100"}`}>
         <div
-          className={`h-full rounded-full ${active ? "bg-white" : "bg-emerald-500"}`}
+          className={`h-full rounded-full ${active ? "bg-slate-900" : "bg-lime-500"}`}
           style={{ width: `${Math.max(pct, 6)}%` }}
         />
       </div>
