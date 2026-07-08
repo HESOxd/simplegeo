@@ -15,21 +15,26 @@ function TopNav() {
   const { pathname } = useLocation();
   return (
     <div className="relative z-10 bg-white border-b border-slate-200">
-      <div className="max-w-6xl mx-auto flex px-4">
-        {NAV.map((item) => {
-          const active = pathname === item.to || (item.to === "/tasks" && pathname.startsWith("/tasks"));
-          return (
-            <Link
-              key={item.to}
-              to={item.to}
-              className={`flex-1 text-center text-sm font-medium py-3.5 border-b-2 transition-colors ${
-                active ? "border-emerald-600 text-emerald-700" : "border-transparent text-slate-500 hover:text-slate-800"
-              }`}
-            >
-              {item.label}
-            </Link>
-          );
-        })}
+      <div className="max-w-6xl mx-auto flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-6 px-4">
+        <Link to="/tasks" className="flex-shrink-0 pt-3 sm:py-2.5">
+          <img src="/logo.png" alt="SimpleGeo" className="h-5 sm:h-6 w-auto" />
+        </Link>
+        <div className="flex sm:flex-1 sm:justify-center sm:gap-2">
+          {NAV.map((item) => {
+            const active = pathname === item.to || (item.to === "/tasks" && pathname.startsWith("/tasks"));
+            return (
+              <Link
+                key={item.to}
+                to={item.to}
+                className={`flex-1 sm:flex-none px-1 sm:px-4 text-center text-sm font-medium py-3.5 border-b-2 transition-colors whitespace-nowrap ${
+                  active ? "border-emerald-600 text-emerald-700" : "border-transparent text-slate-500 hover:text-slate-800"
+                }`}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
