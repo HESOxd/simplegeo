@@ -81,17 +81,18 @@ export default function Trainer() {
         <div className="relative max-w-6xl mx-auto p-4 py-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           <div className="mb-8">
-            <p className="text-emerald-700 font-semibold tracking-wide text-sm uppercase">ОГЭ · География</p>
-            <h1 className="text-3xl font-extrabold text-slate-900 mt-1" style={{ fontFamily: "'Unbounded', sans-serif" }}>Тренажёр по разделам</h1>
-            <p className="text-slate-500 mt-2">Банк ФИПИ, {TASKS.length} заданий. Выбери раздел и число вопросов.</p>
+            <p className="text-slate-500">Банк ФИПИ, {TASKS.length} заданий. Выбери раздел и число вопросов.</p>
           </div>
 
           <Link
             to="/tasks/variant"
-            className="block mb-8 bg-slate-900 hover:bg-slate-800 text-white rounded-xl p-4 transition-colors"
+            className="flex items-start justify-between gap-4 mb-8 bg-slate-900 hover:bg-slate-800 text-white rounded-xl p-4 transition-colors"
           >
-            <p className="font-semibold">Собрать полный вариант — 30 заданий</p>
-            <p className="text-sm text-slate-300 mt-0.5">Как на настоящем экзамене, без таймера, с разбором ошибок</p>
+            <div>
+              <p className="font-semibold">Собрать полный вариант — 30 заданий</p>
+              <p className="text-sm text-slate-300 mt-0.5">Как на настоящем экзамене, без таймера, с разбором ошибок</p>
+            </div>
+            <img src="/favicon.png" alt="" className="w-8 h-8 rounded-lg flex-shrink-0" />
           </Link>
 
           <p className="text-sm font-medium text-slate-700 mb-2">Раздел</p>
