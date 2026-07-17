@@ -34,6 +34,7 @@ jobs:
             --endpoint-url ${{ secrets.S3_ENDPOINT }} \
             --delete \
             --exclude "index.html" \
+            --exclude "weekly-variants.json" \
             --cache-control "public, max-age=31536000, immutable"
 
           # index.html — точка входа SPA, её отдаёт хостинг на ЛЮБОЙ вложенный
@@ -44,3 +45,12 @@ jobs:
           aws s3 cp ./dist/index.html s3://${{ secrets.S3_BUCKET }}/index.html \
             --endpoint-url ${{ secrets.S3_ENDPOINT }} \
             --cache-control "no-cache, no-store, must-revalidate"
+
+          # weekly-variants.json — та же логика: имя файла не меняется, а
+          # содержимое должно обновляться раз в неделю, поэтому без no-cache
+          # браузеры/CDN отдавали бы старые варианты ещё год.
+          if [ -f ./dist/weekly-variants.json ]; then
+            aws s3 cp ./dist/weekly-variants.json s3://${{ secrets.S3_BUCKET }}/weekly-variants.json \
+              --endpoint-url ${{ secrets.S3_ENDPOINT }} \
+              --cache-control "no-cache, no-store, must-revalidate"
+          fi

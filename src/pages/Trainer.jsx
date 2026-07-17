@@ -33,6 +33,7 @@ export default function Trainer() {
   const [single, setSingle] = useState(null);
   const [multi, setMulti] = useState([]);
   const [text, setText] = useState("");
+  const [selfRight, setSelfRight] = useState(null);
 
   const sectionList = useMemo(() => {
     const present = [...new Set(TASKS.map((t) => t.sec))].sort();
@@ -54,18 +55,26 @@ export default function Trainer() {
     setSingle(null);
     setMulti([]);
     setText("");
+    setSelfRight(null);
   }
 
   const task = deck[pos];
-  const currentAnswer = { single, multi, text };
+  const currentAnswer = { single, multi, text, selfRight };
+  const canAdvance = answered && (task?.type !== "essay" || selfRight !== null);
 
   function check() {
     if (answered) return;
     if (task.type === "single" && single === null) return;
     if (task.type === "multi" && multi.length === 0) return;
     if (task.type === "short" && text.trim() === "") return;
+    if (task.type === "sequence" && text.trim() === "") return;
     setAnswered(true);
-    if (isTaskRight(task, currentAnswer)) setCorrectCount((c) => c + 1);
+    if (task.type !== "essay" && isTaskRight(task, currentAnswer)) setCorrectCount((c) => c + 1);
+  }
+  function markSelf(isRight) {
+    if (selfRight !== null) return;
+    setSelfRight(isRight);
+    if (isRight) setCorrectCount((c) => c + 1);
   }
   function next() {
     if (pos + 1 < deck.length) {
@@ -107,6 +116,17 @@ export default function Trainer() {
               </div>
               <img src="/favicon.png" alt="" className="w-8 h-8 rounded-lg flex-shrink-0" />
             </div>
+          </Link>
+
+          <Link
+            to="/tasks/weekly"
+            className="flex items-center justify-between mb-8 bg-white border border-slate-200 hover:border-green-400 hover:bg-green-50/40 rounded-xl p-4 transition-colors"
+          >
+            <div>
+              <p className="font-semibold text-slate-900">Варианты недели</p>
+              <p className="text-sm text-slate-500 mt-0.5">5 фиксированных вариантов, обновляются раз в неделю — можно продолжить позже</p>
+            </div>
+            <span className="text-green-700 font-semibold text-sm shrink-0">Открыть →</span>
           </Link>
 
           <p className="text-sm font-medium text-slate-700 mb-2">Раздел</p>
@@ -215,31 +235,39 @@ export default function Trainer() {
         single={single} setSingle={setSingle}
         multi={multi} toggleMulti={toggleMulti}
         text={text} setText={setText}
+        selfRight={selfRight} onMarkSelf={markSelf}
         onCheck={check}
       />
 
       <div className="mt-5">
         {!answered ? (
           <button onClick={check} className="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3 rounded-xl transition-colors">Проверить</button>
-        ) : (
+        ) : canAdvance ? (
           <button onClick={next} className="w-full bg-gradient-to-r from-green-200 to-green-400 hover:from-green-300 hover:to-green-500 text-slate-900 font-semibold py-3 rounded-xl transition-colors">
             {pos + 1 < deck.length ? "Дальше" : "Итог"}
           </button>
-        )}
+        ) : null}
       </div>
     </Shell>
   );
 }
 
 // ── переиспользуемая карточка задания (используется и в Trainer, и в Variant) ──
-export function TaskCard({ task, answered, right, single, setSingle, multi, toggleMulti, text, setText, onCheck }) {
+export function TaskCard({ task, answered, right, single, setSingle, multi, toggleMulti, text, setText, selfRight, onMarkSelf, onCheck }) {
+  const awaitingSelfCheck = task.type === "essay" && answered && selfRight === null;
   return (
     <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6">
       <span className="inline-block text-xs font-semibold text-green-700 bg-green-50 rounded-full px-2.5 py-1 mb-3">
         {SECTIONS[task.sec] || "Раздел " + task.sec}
         {task.type === "multi" && " · выбор нескольких"}
         {task.type === "short" && " · впиши ответ"}
+        {task.type === "sequence" && " · впиши последовательность"}
+        {task.type === "essay" && " · развёрнутый ответ"}
       </span>
+
+      {task.passage && (
+        <p className="mb-3 p-3 rounded-lg bg-slate-50 border border-slate-200 text-sm text-slate-700 leading-relaxed whitespace-pre-line">{task.passage}</p>
+      )}
 
       <h2 className="text-lg font-semibold text-slate-900 leading-snug">{task.q}</h2>
 
@@ -247,7 +275,43 @@ export function TaskCard({ task, answered, right, single, setSingle, multi, togg
         <img src={task.image} alt="иллюстрация к заданию" className="mt-4 rounded-lg border border-slate-200 max-h-64 object-contain" />
       )}
 
-      {task.type === "single" && (
+      {task.table && (
+        <div className="mt-4 overflow-x-auto rounded-lg border border-slate-200">
+          <table className="w-full text-sm text-slate-700">
+            <tbody>
+              {task.table.split("\n").filter(Boolean).map((line, i) => (
+                <tr key={i} className={i % 2 ? "bg-slate-50" : ""}>
+                  {line.split("|").map((cell, j) => (
+                    <td key={j} className="px-3 py-1.5 border-t border-slate-100 first:font-medium">{cell.trim()}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {task.type === "single" && task.optionImages && (
+        <div className="mt-5 grid grid-cols-2 gap-3">
+          {task.optionImages.map((img, i) => {
+            let s = "border-slate-200 hover:border-green-400 hover:bg-green-50";
+            if (answered) {
+              if (i === task.correct) s = "border-green-500 bg-green-50";
+              else if (i === single) s = "border-rose-400 bg-rose-50";
+              else s = "border-slate-200 opacity-60";
+            } else if (i === single) s = "border-green-500 bg-green-50";
+            return (
+              <button key={i} disabled={answered} onClick={() => setSingle(i)}
+                className={`text-left p-3 rounded-xl border-2 transition-colors flex flex-col items-center gap-2 ${s}`}>
+                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-slate-100 text-slate-500 text-sm font-semibold flex items-center justify-center">{i + 1}</span>
+                <img src={img} alt={`вариант ${i + 1}`} className="max-h-40 object-contain" />
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {task.type === "single" && task.options && (
         <div className="mt-5 space-y-3">
           {task.options.map((opt, i) => {
             let s = "border-slate-200 hover:border-green-400 hover:bg-green-50";
@@ -305,7 +369,58 @@ export function TaskCard({ task, answered, right, single, setSingle, multi, togg
         </div>
       )}
 
-      {answered && (
+      {task.type === "sequence" && (
+        <div className="mt-5">
+          <input
+            value={text}
+            onChange={(e) => setText(e.target.value.replace(/[^0-9]/g, ""))}
+            onKeyDown={(e) => e.key === "Enter" && onCheck()}
+            disabled={answered}
+            inputMode="numeric"
+            placeholder="Впиши цифры без пробелов, например 213"
+            className={`w-full px-4 py-3 rounded-xl border-2 outline-none text-slate-800 tracking-widest ${answered ? (right ? "border-green-500 bg-green-50" : "border-rose-400 bg-rose-50") : "border-slate-300 focus:border-green-500"}`}
+          />
+          {answered && !right && (
+            <p className="mt-2 text-sm text-slate-600">Верный ответ: <b className="text-green-700">{task.answer}</b></p>
+          )}
+        </div>
+      )}
+
+      {task.type === "essay" && (
+        <div className="mt-5">
+          <textarea
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            disabled={answered}
+            rows={4}
+            placeholder="Напиши свой ответ (можно кратко, своими словами)"
+            className="w-full px-4 py-3 rounded-xl border-2 outline-none text-slate-800 border-slate-300 focus:border-green-500 resize-none"
+          />
+          {answered && (
+            <div className="mt-4 p-4 rounded-xl bg-green-50 border border-green-200">
+              <p className="text-xs font-semibold text-green-700 uppercase tracking-wide mb-1">Эталонный ответ</p>
+              <p className="text-sm text-slate-800 leading-relaxed">{task.answer}</p>
+              {task.criteria && (
+                <>
+                  <p className="text-xs font-semibold text-green-700 uppercase tracking-wide mt-3 mb-1">Критерии</p>
+                  <p className="text-sm text-slate-700 leading-relaxed">{task.criteria}</p>
+                </>
+              )}
+            </div>
+          )}
+          {awaitingSelfCheck && (
+            <div className="mt-4">
+              <p className="text-sm text-slate-600 mb-2">Сравни со своим ответом — похоже?</p>
+              <div className="flex gap-3">
+                <button onClick={() => onMarkSelf(true)} className="flex-1 bg-green-100 hover:bg-green-200 text-green-800 font-semibold py-2.5 rounded-xl transition-colors">Да, похоже</button>
+                <button onClick={() => onMarkSelf(false)} className="flex-1 bg-rose-100 hover:bg-rose-200 text-rose-800 font-semibold py-2.5 rounded-xl transition-colors">Не совсем</button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {answered && !awaitingSelfCheck && (
         <div className={`mt-4 text-sm font-medium ${right ? "text-green-700" : "text-rose-600"}`}>
           {right ? "Верно" : "Неверно"}
         </div>

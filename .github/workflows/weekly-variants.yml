@@ -1,0 +1,61 @@
+# Раз в неделю пересобирает 5 "вариантов недели" (scripts/generateWeeklyVariants.js),
+# коммитит public/weekly-variants.json и деплоит сайт — самодостаточный workflow,
+# не полагается на то, что deploy.yml подхватит пуш (коммиты через встроенный
+# GITHUB_TOKEN намеренно не запускают другие workflow).
+#
+# Правишь неудачный вариант — просто перезапусти вручную:
+# Actions → Weekly variants → Run workflow.
+name: weekly-variants
+
+on:
+  schedule:
+    # Каждый понедельник в 03:00 UTC (06:00 МСК)
+    - cron: "0 3 * * 1"
+  workflow_dispatch: {}
+
+jobs:
+  generate-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+
+      - name: Generate weekly variants
+        run: node scripts/generateWeeklyVariants.js
+
+      - name: Commit updated variants
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/weekly-variants.json
+          git diff --staged --quiet && echo "no changes" || git commit -m "chore: weekly variants $(date -u +%Y-%m-%d)"
+          git push
+
+      - run: npm run build
+      - name: Update CA certificates
+        run: sudo apt-get update && sudo apt-get install -y ca-certificates && sudo update-ca-certificates
+      - name: Upload dist to Selectel S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.S3_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
+          AWS_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt
+        run: |
+          aws s3 sync ./dist s3://${{ secrets.S3_BUCKET }} \
+            --endpoint-url ${{ secrets.S3_ENDPOINT }} \
+            --delete \
+            --exclude "index.html" \
+            --exclude "weekly-variants.json" \
+            --cache-control "public, max-age=31536000, immutable"
+
+          aws s3 cp ./dist/index.html s3://${{ secrets.S3_BUCKET }}/index.html \
+            --endpoint-url ${{ secrets.S3_ENDPOINT }} \
+            --cache-control "no-cache, no-store, must-revalidate"
+
+          aws s3 cp ./dist/weekly-variants.json s3://${{ secrets.S3_BUCKET }}/weekly-variants.json \
+            --endpoint-url ${{ secrets.S3_ENDPOINT }} \
+            --cache-control "no-cache, no-store, must-revalidate"
