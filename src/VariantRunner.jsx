@@ -101,9 +101,9 @@ export default function VariantRunner({ deck, backTo, onRestart, persistKey }) {
           <p className="mt-1 text-lg text-slate-500">{pct}% верных</p>
         </div>
 
-        <div className="space-y-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
           {answers.map((a, i) => (
-            <div key={i} className={`rounded-xl border-2 p-4 ${a.right ? "border-green-200 bg-green-50/40" : "border-rose-200 bg-rose-50/40"}`}>
+            <div key={i} className={`rounded-xl border-2 p-3 ${a.right ? "border-green-200 bg-green-50/40" : "border-rose-200 bg-rose-50/40"}`}>
               <div className="flex items-start justify-between gap-3">
                 <p className="text-sm font-medium text-slate-800">{i + 1}. {a.task.q}</p>
                 <span className={`shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full ${a.right ? "bg-green-400 text-slate-900" : "bg-rose-500 text-white"}`}>

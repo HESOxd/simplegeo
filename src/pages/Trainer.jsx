@@ -3,6 +3,19 @@ import { Link } from "react-router-dom";
 import { TASKS, SECTIONS } from "../data.js";
 import { norm, shuffle, isTaskRight } from "../utils.js";
 
+const PASSAGE_INTRO_RE = /^Прочитайте текст и выполните задания\.?\s*/;
+
+// Некоторые задания хранят перечисление "1) А 2) Б 3) В" одной строкой без
+// переносов (так исходно отдано FIPI) — разносим по строкам для читаемости.
+// Декоративная нумерация без содержимого (варианты-картинки уже отрисованы
+// отдельно, см. optionImages) вида "1) 2) 3) 4)" — просто убираем.
+function formatQuestionText(q) {
+  if (!q) return q;
+  let out = q.replace(/\s*(?:\d\)\s*){2,}$/, (m) => (/[^\d)\s]/.test(m) ? m : ""));
+  out = out.replace(/\s(\d\))/g, "\n$1");
+  return out.trim();
+}
+
 export const GRADIENT_TEXT = {
   backgroundImage: "linear-gradient(90deg, #4ade80, #15803d)",
   WebkitBackgroundClip: "text",
@@ -235,12 +248,12 @@ export default function Trainer() {
 }
 
 // ── переиспользуемая карточка задания (используется и в Trainer, и в Variant) ──
-export function TaskCard({ task, answered, right, single, setSingle, multi, toggleMulti, text, setText, selfRight, onMarkSelf, onCheck }) {
+export function TaskCard({ task, answered, right, single, setSingle, multi, toggleMulti, text, setText, selfRight, onMarkSelf, onCheck, kicker }) {
   const awaitingSelfCheck = task.type === "essay" && answered && selfRight === null;
   return (
     <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6">
       <span className="inline-block text-xs font-semibold text-green-700 bg-green-50 rounded-full px-2.5 py-1 mb-3">
-        {SECTIONS[task.sec] || "Раздел " + task.sec}
+        {kicker || SECTIONS[task.sec] || "Раздел " + task.sec}
         {task.type === "multi" && " · выбор нескольких"}
         {task.type === "short" && " · впиши ответ"}
         {task.type === "sequence" && " · впиши последовательность"}
@@ -248,10 +261,12 @@ export function TaskCard({ task, answered, right, single, setSingle, multi, togg
       </span>
 
       {task.passage && (
-        <p className="mb-3 p-3 rounded-lg bg-slate-50 border border-slate-200 text-sm text-slate-700 leading-relaxed whitespace-pre-line">{task.passage}</p>
+        <p className="mb-3 p-4 rounded-lg bg-slate-50 border border-slate-200 text-[15px] text-slate-700 leading-relaxed whitespace-pre-line">
+          {task.passage.replace(PASSAGE_INTRO_RE, "")}
+        </p>
       )}
 
-      <h2 className="text-lg font-semibold text-slate-900 leading-snug">{task.q}</h2>
+      <h2 className="text-lg font-semibold text-slate-900 leading-snug whitespace-pre-line">{formatQuestionText(task.q)}</h2>
 
       {task.image && (
         <img src={task.image} alt="иллюстрация к заданию" className="mt-4 rounded-lg border border-slate-200 max-h-64 object-contain" />
@@ -435,7 +450,7 @@ function OpenBadge() {
 export function Shell({ children }) {
   return (
     <div className="flex justify-center p-4">
-      <div className="w-full max-w-lg py-6">{children}</div>
+      <div className="w-full max-w-3xl py-6">{children}</div>
     </div>
   );
 }

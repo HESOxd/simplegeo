@@ -180,7 +180,7 @@ export default function ByPosition() {
       </div>
 
       <TaskCard
-        task={task} answered={answered} right={right}
+        task={task} answered={answered} right={right} kicker={POSITION_TOPIC[pos]}
         single={single} setSingle={setSingle}
         multi={multi} toggleMulti={toggleMulti}
         text={text} setText={setText}
