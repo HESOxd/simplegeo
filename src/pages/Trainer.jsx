@@ -268,8 +268,15 @@ export function TaskCard({ task, answered, right, single, setSingle, multi, togg
 
       <h2 className="text-lg font-semibold text-slate-900 leading-snug whitespace-pre-line">{formatQuestionText(task.q)}</h2>
 
-      {task.image && (
+      {task.image && !task.image2 && (
         <img src={task.image} alt="иллюстрация к заданию" className="mt-4 rounded-lg border border-slate-200 max-h-64 object-contain" />
+      )}
+
+      {task.image && task.image2 && (
+        <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <img src={task.image} alt="климатограмма" className="rounded-lg border border-slate-200 max-h-64 object-contain bg-white" />
+          <img src={task.image2} alt="карта с пунктами" className="rounded-lg border border-slate-200 max-h-64 object-contain bg-white" />
+        </div>
       )}
 
       {task.table && (
