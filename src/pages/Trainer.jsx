@@ -120,11 +120,22 @@ export default function Trainer() {
 
           <Link
             to="/tasks/weekly"
-            className="flex items-center justify-between mb-8 bg-white border border-slate-200 hover:border-green-400 hover:bg-green-50/40 rounded-xl p-4 transition-colors"
+            className="flex items-center justify-between mb-4 bg-white border border-slate-200 hover:border-green-400 hover:bg-green-50/40 rounded-xl p-4 transition-colors"
           >
             <div>
               <p className="font-semibold text-slate-900">Варианты недели</p>
               <p className="text-sm text-slate-500 mt-0.5">5 фиксированных вариантов, обновляются раз в неделю — можно продолжить позже</p>
+            </div>
+            <span className="text-green-700 font-semibold text-sm shrink-0">Открыть →</span>
+          </Link>
+
+          <Link
+            to="/tasks/by-number"
+            className="flex items-center justify-between mb-8 bg-white border border-slate-200 hover:border-green-400 hover:bg-green-50/40 rounded-xl p-4 transition-colors"
+          >
+            <div>
+              <p className="font-semibold text-slate-900">По номеру задания</p>
+              <p className="text-sm text-slate-500 mt-0.5">Выбери конкретный номер (1-30) и тренируйся только на нём, как на реальном экзамене</p>
             </div>
             <span className="text-green-700 font-semibold text-sm shrink-0">Открыть →</span>
           </Link>

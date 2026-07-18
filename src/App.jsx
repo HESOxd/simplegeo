@@ -2,6 +2,7 @@ import React from "react";
 import { Routes, Route, Navigate, Link, useLocation } from "react-router-dom";
 import Trainer from "./pages/Trainer.jsx";
 import Variant from "./pages/Variant.jsx";
+import ByPosition from "./pages/ByPosition.jsx";
 import WeeklyVariants from "./pages/WeeklyVariants.jsx";
 import About from "./pages/About.jsx";
 import Course from "./pages/Course.jsx";
@@ -60,6 +61,7 @@ export default function App() {
         <Route path="/" element={<Navigate to="/tasks" replace />} />
         <Route path="/tasks" element={<Trainer />} />
         <Route path="/tasks/variant" element={<Variant />} />
+        <Route path="/tasks/by-number" element={<ByPosition />} />
         <Route path="/tasks/weekly" element={<WeeklyVariants />} />
         <Route path="/about" element={<About />} />
         <Route path="/course" element={<Course />} />
