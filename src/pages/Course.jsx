@@ -6,8 +6,8 @@ import { GRADIENT_TEXT } from "./Trainer.jsx";
 // ─────────────────────────────────────────────────────────
 const COURSE_TITLE = "Полный гайд по решению заданий ОГЭ";
 const COURSE_DESCRIPTION = "Xmind файл с разбором заданий, примерами решений и лайфхаками";
-const PRICE = "699 ₽";
-const OLD_PRICE = "999 ₽";
+const PRICE = "1499 ₽";
+const OLD_PRICE = "3000 ₽";
 const TELEGRAM_SIGNUP = "https://t.me/prostayageo";
 const PREVIEW_IMAGE = "/course-preview.jpg";
 
