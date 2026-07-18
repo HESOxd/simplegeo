@@ -100,7 +100,7 @@ export default function Trainer() {
             className="group flex items-center justify-between mb-4 bg-white border border-slate-200 hover:border-green-400 hover:bg-green-50/40 rounded-xl p-4 transition-colors"
           >
             <p className="font-semibold text-slate-900">Варианты недели</p>
-            <OpenBadge variant="chevron" />
+            <OpenBadge />
           </Link>
 
           <Link
@@ -108,7 +108,7 @@ export default function Trainer() {
             className="group flex items-center justify-between mb-8 bg-white border border-slate-200 hover:border-green-400 hover:bg-green-50/40 rounded-xl p-4 transition-colors"
           >
             <p className="font-semibold text-slate-900">По номеру задания</p>
-            <OpenBadge variant="expand" />
+            <OpenBadge />
           </Link>
 
           <p className="text-sm font-medium text-slate-700 mb-2">Раздел</p>
@@ -424,22 +424,11 @@ export function GreenBlob({ className = "" }) {
   );
 }
 
-function OpenBadge({ variant = "chevron" }) {
+function OpenBadge() {
   return (
-    <span className="w-8 h-8 rounded-full bg-[#28c840] flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
-      {variant === "expand" ? (
-        <svg viewBox="0 0 10 10" className="w-3.5 h-3.5" fill="none">
-          <path d="M6 1H9V4" stroke="white" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M4 9H1V6" stroke="white" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M9 1L5.3 4.7" stroke="white" strokeWidth="1.3" strokeLinecap="round" />
-          <path d="M1 9L4.7 5.3" stroke="white" strokeWidth="1.3" strokeLinecap="round" />
-        </svg>
-      ) : (
-        <svg viewBox="0 0 10 10" className="w-3 h-3" fill="none">
-          <path d="M3 1.5L7 5L3 8.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      )}
-    </span>
+    <svg viewBox="0 0 10 10" className="w-3 h-3 text-slate-400 group-hover:text-green-600 transition-colors shrink-0" fill="none">
+      <path d="M3 1.5L7 5L3 8.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }
 

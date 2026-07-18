@@ -94,7 +94,7 @@ export default function ByPosition() {
             Выбери номер — потренируешься только на заданиях именно этого типа, как на настоящем экзамене под этим номером.
           </p>
         </div>
-        <div className="grid grid-cols-5 sm:grid-cols-6 gap-2.5">
+        <div className="flex flex-col gap-2">
           {Array.from({ length: 30 }, (_, i) => i + 1).map((p) => {
             const n = (pools[p] || []).length;
             return (
@@ -102,15 +102,21 @@ export default function ByPosition() {
                 key={p}
                 onClick={() => n > 0 && openPos(p)}
                 disabled={n === 0}
-                title={POSITION_TOPIC[p]}
-                className={`aspect-square rounded-xl border-2 flex flex-col items-center justify-center transition-colors ${
+                className={`w-full flex items-center gap-3 rounded-xl border px-3.5 py-3 text-left transition-colors ${
                   n === 0
                     ? "border-slate-100 text-slate-300 cursor-not-allowed"
-                    : "border-slate-200 bg-white hover:border-green-400 hover:bg-green-50"
+                    : "border-slate-200 bg-white hover:border-green-400 hover:bg-green-50/40"
                 }`}
               >
-                <span className="text-lg font-bold text-slate-900">{p}</span>
-                <span className="text-[10px] text-slate-400">{n}</span>
+                <span
+                  className={`shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold ${
+                    n === 0 ? "bg-slate-50 text-slate-300" : "bg-slate-100 text-slate-700"
+                  }`}
+                >
+                  {p}
+                </span>
+                <span className="flex-1 text-sm font-medium text-slate-900 leading-snug">{POSITION_TOPIC[p]}</span>
+                <span className="shrink-0 text-xs text-slate-400">{n}</span>
               </button>
             );
           })}
