@@ -483,7 +483,7 @@ function SectionCard({ active, onClick, icon, name, n, max }) {
         <span className={`text-xs font-semibold ${active ? "text-slate-700" : "text-slate-400"}`}>{n}</span>
       </div>
       <p
-        className={`text-sm leading-snug ${active ? "text-slate-900" : "text-slate-800"}`}
+        className={`text-sm leading-snug break-words ${active ? "text-slate-900" : "text-slate-800"}`}
         style={{ fontFamily: "'Unbounded', sans-serif", fontWeight: 700 }}
       >
         {name}
