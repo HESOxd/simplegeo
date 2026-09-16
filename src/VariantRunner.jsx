@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { isTaskRight } from "./utils.js";
-import { TaskCard, Shell } from "./pages/Trainer.jsx";
+import { TaskCard, Shell, ProgressBar, PrimaryButton, DarkButton } from "./pages/Trainer.jsx";
 
 function loadProgress(key) {
   if (!key) return null;
@@ -96,6 +96,7 @@ export default function VariantRunner({ deck, backTo, onRestart, persistKey }) {
     return (
       <Shell>
         <div className="text-center mb-8">
+          <img src="/mascot/finish.png" alt="" className="w-24 h-24 object-contain mx-auto mb-1" />
           <p className="text-sm font-semibold uppercase tracking-wide text-green-700">Результат варианта</p>
           <p className="mt-3 text-6xl font-bold text-slate-900">{correctCount}<span className="text-2xl text-slate-400">/{answers.length}</span></p>
           <p className="mt-1 text-lg text-slate-500">{pct}% верных</p>
@@ -131,7 +132,7 @@ export default function VariantRunner({ deck, backTo, onRestart, persistKey }) {
 
         <div className="mt-8 flex gap-3">
           {onRestart && (
-            <button onClick={onRestart} className="flex-1 bg-gradient-to-r from-green-200 to-green-400 hover:from-green-300 hover:to-green-500 text-slate-900 font-semibold py-3 rounded-xl transition-colors">Новый вариант</button>
+            <PrimaryButton onClick={onRestart} className="flex-1 py-3">Новый вариант</PrimaryButton>
           )}
           <Link to={backTo} className="flex-1 text-center bg-white border border-slate-300 hover:bg-slate-50 text-slate-800 font-semibold py-3 rounded-xl transition-colors">Назад</Link>
         </div>
@@ -149,9 +150,7 @@ export default function VariantRunner({ deck, backTo, onRestart, persistKey }) {
           <span>Задание {pos + 1} из {deck.length}</span>
           <span>Верно: {answers.filter((a) => a.right).length}</span>
         </div>
-        <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
-          <div className="h-full bg-green-500 transition-all duration-300" style={{ width: `${(pos / deck.length) * 100}%` }} />
-        </div>
+        <ProgressBar current={pos} total={deck.length} />
       </div>
 
       <TaskCard
@@ -165,11 +164,11 @@ export default function VariantRunner({ deck, backTo, onRestart, persistKey }) {
 
       <div className="mt-5">
         {!answered ? (
-          <button onClick={check} className="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3 rounded-xl transition-colors">Проверить</button>
+          <DarkButton onClick={check} className="w-full py-3">Проверить</DarkButton>
         ) : canAdvance ? (
-          <button onClick={next} className="w-full bg-gradient-to-r from-green-200 to-green-400 hover:from-green-300 hover:to-green-500 text-slate-900 font-semibold py-3 rounded-xl transition-colors">
+          <PrimaryButton onClick={next} className="w-full py-3">
             {pos + 1 < deck.length ? "Дальше" : "К разбору"}
-          </button>
+          </PrimaryButton>
         ) : null}
       </div>
     </Shell>

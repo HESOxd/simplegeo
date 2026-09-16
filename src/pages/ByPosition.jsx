@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { TASKS } from "../data.js";
 import { buildPositionPools, POSITION_TOPIC } from "../positionClassifier.js";
 import { shuffle, isTaskRight } from "../utils.js";
-import { Shell, Chip, TaskCard } from "./Trainer.jsx";
+import { Shell, Chip, TaskCard, ProgressBar, PrimaryButton, DarkButton } from "./Trainer.jsx";
 
 // Тренировка по конкретному номеру задания (1-30), как на sdamgia —
 // в отличие от "полного варианта" тут выбираешь ОДНУ позицию и решаешь
@@ -142,9 +142,9 @@ export default function ByPosition() {
             <Chip key={n} active={count === n} onClick={() => setCount(n)}>{n === "all" ? "Все" : n}</Chip>
           ))}
         </div>
-        <button onClick={start} className="w-full bg-gradient-to-r from-green-200 to-green-400 hover:from-green-300 hover:to-green-500 text-slate-900 font-semibold py-3.5 rounded-xl transition-colors">
+        <PrimaryButton onClick={start} className="w-full py-3.5">
           Начать
-        </button>
+        </PrimaryButton>
       </Shell>
     );
   }
@@ -153,11 +153,12 @@ export default function ByPosition() {
     return (
       <Shell>
         <div className="text-center py-6">
+          <img src="/mascot/finish.png" alt="" className="w-24 h-24 object-contain mx-auto mb-1" />
           <p className="text-sm font-semibold uppercase tracking-wide text-green-700">Задание {pos} · Результат</p>
           <p className="mt-3 text-6xl font-bold text-slate-900">{correctCount}<span className="text-2xl text-slate-400">/{deck.length}</span></p>
           <p className="mt-1 text-lg text-slate-500">{Math.round((correctCount / deck.length) * 100)}% верных</p>
           <div className="mt-8 flex gap-3">
-            <button onClick={start} className="flex-1 bg-gradient-to-r from-green-200 to-green-400 hover:from-green-300 hover:to-green-500 text-slate-900 font-semibold py-3 rounded-xl transition-colors">Ещё раз</button>
+            <PrimaryButton onClick={start} className="flex-1 py-3">Ещё раз</PrimaryButton>
             <button onClick={() => setScreen("grid")} className="flex-1 bg-white border border-slate-300 hover:bg-slate-50 text-slate-800 font-semibold py-3 rounded-xl transition-colors">Все номера</button>
           </div>
         </div>
@@ -174,9 +175,7 @@ export default function ByPosition() {
           <span>Задание {pos} · {idx + 1} из {deck.length}</span>
           <span>Верно: {correctCount}</span>
         </div>
-        <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
-          <div className="h-full bg-green-500 transition-all duration-300" style={{ width: `${(idx / deck.length) * 100}%` }} />
-        </div>
+        <ProgressBar current={idx} total={deck.length} />
       </div>
 
       <TaskCard
@@ -190,11 +189,11 @@ export default function ByPosition() {
 
       <div className="mt-5">
         {!answered ? (
-          <button onClick={check} className="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3 rounded-xl transition-colors">Проверить</button>
+          <DarkButton onClick={check} className="w-full py-3">Проверить</DarkButton>
         ) : canAdvance ? (
-          <button onClick={next} className="w-full bg-gradient-to-r from-green-200 to-green-400 hover:from-green-300 hover:to-green-500 text-slate-900 font-semibold py-3 rounded-xl transition-colors">
+          <PrimaryButton onClick={next} className="w-full py-3">
             {idx + 1 < deck.length ? "Дальше" : "Итог"}
-          </button>
+          </PrimaryButton>
         ) : null}
       </div>
     </Shell>

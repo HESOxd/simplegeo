@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { TASKS } from "../data.js";
 import { buildFaithfulVariant } from "../variantBuilder.js";
 import VariantRunner from "../VariantRunner.jsx";
-import { Shell } from "./Trainer.jsx";
+import { Shell, PrimaryButton } from "./Trainer.jsx";
 
 // Собирает вариант, максимально совпадающий по структуре с реальным ОГЭ
 // (позиции 9-12 — блок с картой, 23-25 — блок про население, 16-17 — пара
@@ -28,9 +28,9 @@ export default function Variant() {
             каждого ответа: что верно, что нет, и как правильно.
           </p>
         </div>
-        <button onClick={start} className="w-full bg-gradient-to-r from-green-200 to-green-400 hover:from-green-300 hover:to-green-500 text-slate-900 font-semibold py-3.5 rounded-xl transition-colors">
+        <PrimaryButton onClick={start} className="w-full py-3.5">
           Начать вариант
-        </button>
+        </PrimaryButton>
       </Shell>
     );
   }

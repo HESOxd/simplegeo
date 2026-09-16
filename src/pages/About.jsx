@@ -43,7 +43,7 @@ export default function About() {
 
           <div className="flex flex-wrap gap-3 mt-10">
             <a href={TELEGRAM_CONTACT} target="_blank" rel="noopener noreferrer"
-              className="text-center bg-slate-900 hover:bg-slate-800 text-white font-medium px-6 py-3 rounded-xl transition-colors">
+              className="text-center bg-slate-900 hover:bg-slate-800 text-white font-medium px-6 py-3 rounded-xl transition-[transform,box-shadow,background-color] duration-100 shadow-[0_4px_0_0_#020617] active:shadow-[0_1px_0_0_#020617] active:translate-y-[3px]">
               Написать в Telegram
             </a>
             <a href={TELEGRAM_CHANNEL} target="_blank" rel="noopener noreferrer"

@@ -6,6 +6,7 @@ import ByPosition from "./pages/ByPosition.jsx";
 import WeeklyVariants from "./pages/WeeklyVariants.jsx";
 import About from "./pages/About.jsx";
 import Course from "./pages/Course.jsx";
+import NotFound from "./pages/NotFound.jsx";
 
 const NAV = [
   { to: "/tasks", label: "Задания и варианты" },
@@ -65,7 +66,7 @@ export default function App() {
         <Route path="/tasks/weekly" element={<WeeklyVariants />} />
         <Route path="/about" element={<About />} />
         <Route path="/course" element={<Course />} />
-        <Route path="*" element={<Navigate to="/tasks" replace />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   );

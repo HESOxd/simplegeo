@@ -154,12 +154,17 @@ export default function Trainer() {
             ))}
           </div>
 
-          <button onClick={start} className="w-full bg-gradient-to-r from-green-200 to-green-400 hover:from-green-300 hover:to-green-500 text-slate-900 font-semibold py-3.5 rounded-xl transition-colors">
+          <PrimaryButton onClick={start} className="w-full py-3.5">
             Начать
-          </button>
+          </PrimaryButton>
         </div>
 
         <div className="flex flex-col gap-4 lg:sticky lg:top-6 lg:self-start">
+          <div className="flex items-center gap-3 bg-white rounded-2xl border border-slate-200 p-4">
+            <img src="/mascot/welcome.png" alt="" className="w-14 h-14 object-contain flex-shrink-0" />
+            <p className="text-sm text-slate-600 leading-snug">Привет! Выбери раздел слева и начинай — разберём вместе, если что-то пойдёт не так.</p>
+          </div>
+
           <Link to="/about" className="block bg-white rounded-2xl border border-slate-200 p-5 hover:border-green-300 transition-colors">
             <div className="flex items-center gap-3 mb-3">
               <img src="/photo.jpg" alt="Юрий" className="w-12 h-12 rounded-full object-cover border-2 border-green-100" />
@@ -199,11 +204,12 @@ export default function Trainer() {
     return (
       <Shell>
         <div className="text-center py-6">
+          <img src="/mascot/finish.png" alt="" className="w-24 h-24 object-contain mx-auto mb-1" />
           <p className="text-sm font-semibold uppercase tracking-wide text-green-700">Результат</p>
           <p className="mt-3 text-6xl font-bold text-slate-900">{correctCount}<span className="text-2xl text-slate-400">/{deck.length}</span></p>
           <p className="mt-1 text-lg text-slate-500">{pct}% верных · {verdict}</p>
           <div className="mt-8 flex gap-3">
-            <button onClick={start} className="flex-1 bg-gradient-to-r from-green-200 to-green-400 hover:from-green-300 hover:to-green-500 text-slate-900 font-semibold py-3 rounded-xl transition-colors">Ещё раз</button>
+            <PrimaryButton onClick={start} className="flex-1 py-3">Ещё раз</PrimaryButton>
             <button onClick={() => setScreen("home")} className="flex-1 bg-white border border-slate-300 hover:bg-slate-50 text-slate-800 font-semibold py-3 rounded-xl transition-colors">В меню</button>
           </div>
         </div>
@@ -220,9 +226,7 @@ export default function Trainer() {
           <span>Вопрос {pos + 1} из {deck.length}</span>
           <span>Верно: {correctCount}</span>
         </div>
-        <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
-          <div className="h-full bg-green-500 transition-all duration-300" style={{ width: `${(pos / deck.length) * 100}%` }} />
-        </div>
+        <ProgressBar current={pos} total={deck.length} />
       </div>
 
       <TaskCard
@@ -236,11 +240,11 @@ export default function Trainer() {
 
       <div className="mt-5">
         {!answered ? (
-          <button onClick={check} className="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3 rounded-xl transition-colors">Проверить</button>
+          <DarkButton onClick={check} className="w-full py-3">Проверить</DarkButton>
         ) : canAdvance ? (
-          <button onClick={next} className="w-full bg-gradient-to-r from-green-200 to-green-400 hover:from-green-300 hover:to-green-500 text-slate-900 font-semibold py-3 rounded-xl transition-colors">
+          <PrimaryButton onClick={next} className="w-full py-3">
             {pos + 1 < deck.length ? "Дальше" : "Итог"}
-          </button>
+          </PrimaryButton>
         ) : null}
       </div>
     </Shell>
@@ -425,7 +429,8 @@ export function TaskCard({ task, answered, right, single, setSingle, multi, togg
       )}
 
       {answered && !awaitingSelfCheck && (
-        <div className={`mt-4 text-sm font-medium ${right ? "text-green-700" : "text-rose-600"}`}>
+        <div className={`mt-4 flex items-center gap-2 text-sm font-medium ${right ? "text-green-700" : "text-rose-600"}`}>
+          <img src={right ? "/mascot/correct.png" : "/mascot/wrong.png"} alt="" className="w-10 h-10 object-contain flex-shrink-0" />
           {right ? "Верно" : "Неверно"}
         </div>
       )}
@@ -467,6 +472,55 @@ export function Chip({ active, onClick, children }) {
       className={`px-3.5 py-2 rounded-full text-sm font-medium border transition-colors ${
         active ? "bg-gradient-to-br from-green-200 to-green-400 text-slate-900 border-transparent" : "bg-white text-slate-700 border-slate-300 hover:border-green-400"
       }`}>{children}</button>
+  );
+}
+
+// "Объёмные" кнопки (как в Duolingo) — плотная тень снизу, при нажатии кнопка
+// проседает на высоту тени. Только для главного действия экрана: второстепенные
+// кнопки (назад, переключатели и т.п.) остаются плоскими, чтобы не спорить за внимание.
+export function PrimaryButton({ children, className = "", ...props }) {
+  return (
+    <button
+      {...props}
+      className={`bg-gradient-to-r from-green-200 to-green-400 hover:from-green-300 hover:to-green-500 text-slate-900 font-semibold rounded-xl transition-[transform,box-shadow,background-color] duration-100 shadow-[0_4px_0_0_#15803d] active:shadow-[0_1px_0_0_#15803d] active:translate-y-[3px] disabled:opacity-50 disabled:shadow-[0_4px_0_0_#15803d] disabled:active:translate-y-0 disabled:cursor-not-allowed ${className}`}
+    >
+      {children}
+    </button>
+  );
+}
+
+export function DarkButton({ children, className = "", ...props }) {
+  return (
+    <button
+      {...props}
+      className={`bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl transition-[transform,box-shadow,background-color] duration-100 shadow-[0_4px_0_0_#020617] active:shadow-[0_1px_0_0_#020617] active:translate-y-[3px] disabled:opacity-50 disabled:shadow-[0_4px_0_0_#020617] disabled:active:translate-y-0 disabled:cursor-not-allowed ${className}`}
+    >
+      {children}
+    </button>
+  );
+}
+
+// Сегментированная полоса (как в Duolingo) — по делению видно, сколько вопросов
+// осталось, а не только процент. При большом наборе (например "все" в тренировке
+// по номеру задания) деления становятся неразличимо тонкими, так что выше 20
+// заданий откатываемся на обычную гладкую полосу.
+export function ProgressBar({ current, total }) {
+  if (total > 20) {
+    return (
+      <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
+        <div className="h-full bg-green-500 transition-all duration-300" style={{ width: `${(current / total) * 100}%` }} />
+      </div>
+    );
+  }
+  return (
+    <div className="flex gap-1">
+      {Array.from({ length: total }, (_, i) => (
+        <div
+          key={i}
+          className={`h-2 flex-1 rounded-full transition-colors duration-300 ${i < current ? "bg-green-500" : "bg-slate-200"}`}
+        />
+      ))}
+    </div>
   );
 }
 
