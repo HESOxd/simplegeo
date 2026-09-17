@@ -34,7 +34,10 @@ export function isTaskRight(task, answer) {
     const b = [...task.correct].sort().join(",");
     return a === b && (answer.multi || []).length > 0;
   }
-  if (task.type === "short") return norm(answer.text || "") === norm(task.answer);
+  if (task.type === "short") {
+    const accepted = Array.isArray(task.answer) ? task.answer : [task.answer];
+    return accepted.some((a) => norm(answer.text || "") === norm(a));
+  }
   if (task.type === "sequence") return String(answer.text || "").replace(/\s+/g, "") === String(task.answer);
   if (task.type === "essay") return answer.selfRight === true;
   return false;

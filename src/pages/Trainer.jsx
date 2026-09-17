@@ -16,6 +16,22 @@ function formatQuestionText(q) {
   return out.trim();
 }
 
+// Короткие задания-подводки вида "Определите страну по её краткому описанию.
+// <длинное описание>" — визуально отделяем первую фразу как заголовок от
+// самого описания (иначе всё сливается в один сплошной абзац).
+function renderQuestion(q) {
+  const text = formatQuestionText(q);
+  const m = text.match(/^([^\n]{1,70}?[.:])\s+([\s\S]{40,})$/);
+  if (!m) return text;
+  return (
+    <>
+      {m[1]}
+      <br />
+      <span className="font-normal text-slate-600">{m[2]}</span>
+    </>
+  );
+}
+
 export const GRADIENT_TEXT = {
   backgroundImage: "linear-gradient(90deg, #4ade80, #15803d)",
   WebkitBackgroundClip: "text",
@@ -118,9 +134,20 @@ export default function Trainer() {
 
           <Link
             to="/tasks/by-number"
-            className="group flex items-center justify-between mb-8 bg-white border border-slate-200 hover:border-green-400 hover:bg-green-50/40 rounded-xl p-4 transition-colors"
+            className="group flex items-center justify-between mb-4 bg-white border border-slate-200 hover:border-green-400 hover:bg-green-50/40 rounded-xl p-4 transition-colors"
           >
             <p className="font-semibold text-slate-900">По номеру задания</p>
+            <OpenBadge />
+          </Link>
+
+          <Link
+            to="/tasks/demo-2027"
+            className="group flex items-center justify-between mb-8 bg-white border border-slate-200 hover:border-green-400 hover:bg-green-50/40 rounded-xl p-4 transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <p className="font-semibold text-slate-900">Демо-версия ОГЭ 2027</p>
+              <span className="text-[11px] font-semibold text-green-700 bg-green-50 rounded-full px-2 py-0.5">официально, ФИПИ</span>
+            </div>
             <OpenBadge />
           </Link>
 
@@ -254,6 +281,7 @@ export default function Trainer() {
 // ── переиспользуемая карточка задания (используется и в Trainer, и в Variant) ──
 export function TaskCard({ task, answered, right, single, setSingle, multi, toggleMulti, text, setText, selfRight, onMarkSelf, onCheck, kicker }) {
   const awaitingSelfCheck = task.type === "essay" && answered && selfRight === null;
+  const [zoomedSrc, setZoomedSrc] = useState(null);
   return (
     <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6">
       <span className="inline-block text-xs font-semibold text-green-700 bg-green-50 rounded-full px-2.5 py-1 mb-3">
@@ -270,16 +298,44 @@ export function TaskCard({ task, answered, right, single, setSingle, multi, togg
         </p>
       )}
 
-      <h2 className="text-lg font-semibold text-slate-900 leading-snug whitespace-pre-line">{formatQuestionText(task.q)}</h2>
+      <h2 className="text-lg font-semibold text-slate-900 leading-snug whitespace-pre-line">{renderQuestion(task.q)}</h2>
 
       {task.image && !task.image2 && (
-        <img src={task.image} alt="иллюстрация к заданию" className="mt-4 rounded-lg border border-slate-200 max-h-64 object-contain" />
+        <img
+          src={task.image} alt="иллюстрация к заданию — нажми, чтобы увеличить"
+          onClick={() => setZoomedSrc(task.image)}
+          className="mt-4 rounded-lg border border-slate-200 max-h-64 object-contain cursor-zoom-in"
+        />
       )}
 
       {task.image && task.image2 && (
         <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <img src={task.image} alt="климатограмма" className="rounded-lg border border-slate-200 max-h-64 object-contain bg-white" />
-          <img src={task.image2} alt="карта с пунктами" className="rounded-lg border border-slate-200 max-h-64 object-contain bg-white" />
+          <img
+            src={task.image} alt="климатограмма — нажми, чтобы увеличить"
+            onClick={() => setZoomedSrc(task.image)}
+            className="rounded-lg border border-slate-200 max-h-64 object-contain bg-white cursor-zoom-in"
+          />
+          <img
+            src={task.image2} alt="карта с пунктами — нажми, чтобы увеличить"
+            onClick={() => setZoomedSrc(task.image2)}
+            className="rounded-lg border border-slate-200 max-h-64 object-contain bg-white cursor-zoom-in"
+          />
+        </div>
+      )}
+
+      {zoomedSrc && (
+        <div
+          className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4 sm:p-8 cursor-zoom-out"
+          onClick={() => setZoomedSrc(null)}
+        >
+          <img src={zoomedSrc} alt="" className="max-w-full max-h-full object-contain" />
+          <button
+            onClick={() => setZoomedSrc(null)}
+            aria-label="Закрыть"
+            className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white text-2xl leading-none flex items-center justify-center"
+          >
+            ×
+          </button>
         </div>
       )}
 
@@ -372,7 +428,7 @@ export function TaskCard({ task, answered, right, single, setSingle, multi, togg
             className={`w-full px-4 py-3 rounded-xl border-2 outline-none text-slate-800 ${answered ? (right ? "border-green-500 bg-green-50" : "border-rose-400 bg-rose-50") : "border-slate-300 focus:border-green-500"}`}
           />
           {answered && !right && (
-            <p className="mt-2 text-sm text-slate-600">Верный ответ: <b className="text-green-700">{task.answer}</b></p>
+            <p className="mt-2 text-sm text-slate-600">Верный ответ: <b className="text-green-700">{Array.isArray(task.answer) ? task.answer.join(" / ") : task.answer}</b></p>
           )}
         </div>
       )}

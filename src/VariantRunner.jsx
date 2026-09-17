@@ -120,7 +120,8 @@ export default function VariantRunner({ deck, backTo, onRestart, persistKey }) {
               {!a.right && a.task.type !== "essay" && (
                 <p className="text-sm text-slate-600 mt-2">
                   Правильный ответ: <b className="text-green-700">
-                    {a.task.type === "short" || a.task.type === "sequence" ? a.task.answer :
+                    {a.task.type === "short" ? (Array.isArray(a.task.answer) ? a.task.answer.join(" / ") : a.task.answer) :
+                     a.task.type === "sequence" ? a.task.answer :
                      a.task.type === "single" ? (a.task.options ? a.task.options[a.task.correct] : `вариант ${a.task.correct + 1}`) :
                      a.task.correct.map((ci) => a.task.options[ci]).join(", ")}
                   </b>

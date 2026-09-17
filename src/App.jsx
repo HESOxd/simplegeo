@@ -4,6 +4,7 @@ import Trainer from "./pages/Trainer.jsx";
 import Variant from "./pages/Variant.jsx";
 import ByPosition from "./pages/ByPosition.jsx";
 import WeeklyVariants from "./pages/WeeklyVariants.jsx";
+import Demo2027 from "./pages/Demo2027.jsx";
 import About from "./pages/About.jsx";
 import Course from "./pages/Course.jsx";
 import NotFound from "./pages/NotFound.jsx";
@@ -64,6 +65,7 @@ export default function App() {
         <Route path="/tasks/variant" element={<Variant />} />
         <Route path="/tasks/by-number" element={<ByPosition />} />
         <Route path="/tasks/weekly" element={<WeeklyVariants />} />
+        <Route path="/tasks/demo-2027" element={<Demo2027 />} />
         <Route path="/about" element={<About />} />
         <Route path="/course" element={<Course />} />
         <Route path="*" element={<NotFound />} />
