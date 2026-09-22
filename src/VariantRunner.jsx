@@ -25,7 +25,9 @@ function saveProgress(key, data) {
 // делает вызывающая страница (случайный вариант или вариант недели).
 // persistKey — если задан, прогресс (текущая позиция + ответы) сохраняется
 // в localStorage и восстанавливается при повторном заходе на то же устройство.
-export default function VariantRunner({ deck, backTo, onRestart, persistKey }) {
+// renderResult — необязательная подмена экрана разбора (для диагностики);
+// по умолчанию — стандартный разбор варианта. Variant/Weekly не передают проп.
+export default function VariantRunner({ deck, backTo, onRestart, persistKey, renderResult }) {
   const saved = persistKey ? loadProgress(persistKey) : null;
   const restoredAnswers = (saved?.answers || [])
     .map((a) => ({ ...a, task: deck.find((t) => t.id === a.taskId) }))
@@ -91,6 +93,9 @@ export default function VariantRunner({ deck, backTo, onRestart, persistKey }) {
   }
 
   if (screen === "review") {
+    if (typeof renderResult === "function") {
+      return renderResult({ answers, deck, onRestart, backTo });
+    }
     const correctCount = answers.filter((a) => a.right).length;
     const pct = Math.round((correctCount / answers.length) * 100);
     return (
