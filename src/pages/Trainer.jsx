@@ -125,6 +125,18 @@ export default function Trainer() {
         <div className="relative max-w-6xl mx-auto p-4 py-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           <Link
+            to="/tasks/diagnostic"
+            className="group flex items-center gap-3 mb-4 bg-white border border-slate-200 hover:border-green-400 hover:bg-green-50/40 rounded-xl p-4 transition-colors"
+          >
+            <img src="/mascot/welcome.png" alt="" className="w-12 h-12 object-contain shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-slate-900">Узнай свои слабые места</p>
+              <p className="text-sm text-slate-500 mt-0.5">19 заданий · 20 минут · отчёт по блокам</p>
+            </div>
+            <OpenBadge />
+          </Link>
+
+          <Link
             to="/tasks/weekly"
             className="group flex items-center justify-between mb-4 bg-white border border-slate-200 hover:border-green-400 hover:bg-green-50/40 rounded-xl p-4 transition-colors"
           >

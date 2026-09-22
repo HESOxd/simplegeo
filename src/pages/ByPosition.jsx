@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { TASKS } from "../data.js";
 import { buildPositionPools, POSITION_TOPIC } from "../positionClassifier.js";
 import { shuffle, isTaskRight } from "../utils.js";
@@ -10,12 +10,21 @@ import { Shell, Chip, TaskCard, ProgressBar, PrimaryButton, DarkButton } from ".
 // подряд несколько заданий именно этого типа. Пул кандидатов на каждую
 // позицию — из src/positionClassifier.js (тот же классификатор, что
 // использует сборка полного варианта).
+// Query ?pos=N сразу открывает экран setup для этой позиции (из диагностики).
+
+function initialFromQuery(searchParams) {
+  const raw = searchParams.get("pos");
+  if (raw == null) return { screen: "grid", pos: null };
+  const n = Number(raw);
+  if (!Number.isInteger(n) || n < 1 || n > 30) return { screen: "grid", pos: null };
+  return { screen: "setup", pos: n };
+}
 
 export default function ByPosition() {
   const pools = useMemo(() => buildPositionPools(TASKS), []);
-
-  const [screen, setScreen] = useState("grid"); // grid | setup | quiz | result
-  const [pos, setPos] = useState(null);
+  const [searchParams] = useSearchParams();
+  const [screen, setScreen] = useState(() => initialFromQuery(searchParams).screen); // grid | setup | quiz | result
+  const [pos, setPos] = useState(() => initialFromQuery(searchParams).pos);
   const [count, setCount] = useState(10);
 
   const [deck, setDeck] = useState([]);
