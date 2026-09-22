@@ -261,24 +261,24 @@ export default function Diagnostic() {
             <img
               src="/mascot/welcome.png"
               alt=""
-              className="w-[220px] h-[220px] sm:w-[260px] sm:h-[260px] md:w-[280px] md:h-[280px] object-contain mb-5"
+              className="w-[150px] h-[150px] sm:w-[170px] sm:h-[170px] md:w-[180px] md:h-[180px] object-contain mb-4"
             />
-            <p className="text-green-700 font-semibold tracking-wide text-lg sm:text-xl uppercase">
+            <p className="text-green-700 font-semibold tracking-wide text-sm sm:text-base uppercase">
               ОГЭ · География
             </p>
             <h1
-              className="text-5xl sm:text-6xl md:text-7xl text-slate-900 mt-2 leading-[1.1] max-w-3xl"
+              className="text-3xl sm:text-4xl md:text-5xl text-slate-900 mt-2 leading-tight max-w-2xl"
               style={{ fontFamily: "'Unbounded', sans-serif", fontWeight: 700 }}
             >
               Узнай свои слабые места
             </h1>
-            <p className="text-slate-500 mt-4 text-xl sm:text-2xl leading-snug max-w-2xl">
+            <p className="text-slate-500 mt-3 text-base sm:text-lg leading-snug max-w-xl">
               {DIAGNOSTIC_TOTAL} заданий · около 20 минут · отчёт по семи блокам экзамена.
               Без таймера и без прогноза оценки — только карта, где теряются баллы.
             </p>
             <PrimaryButton
               onClick={() => setStarted(true)}
-              className="w-full max-w-xl mt-8 min-h-[4.75rem] px-8 py-6 text-2xl sm:text-3xl font-bold"
+              className="w-full max-w-md mt-6 min-h-[3.25rem] px-6 py-3.5 text-lg sm:text-xl font-semibold"
             >
               Начать диагностику
             </PrimaryButton>
