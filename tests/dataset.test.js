@@ -222,3 +222,48 @@ describe("картинки", () => {
     expect([...new Set(domains)].sort()).toEqual(["https://oge.fipi.ru"]);
   });
 });
+
+describe("бланковые хвосты в data.js", () => {
+  // Артефакты бланка ФИПИ («? океан», «. %») срезаны точечно в банке.
+  // formatQuestionText в Trainer.jsx — страховка на случай перегенерации.
+
+  const GEO_TAIL_IDS = [
+    "fipi-C97A76", "fipi-68FDC4", "fipi-0EA8F6", "fipi-C0C925", "fipi-BBDBC1",
+    "fipi-0E4AD8", "fipi-042A02", "fipi-11592D", "fipi-858769", "fipi-E2DB1F",
+    "fipi-40310D", "fipi-D38E9B", "fipi-2D658A", "fipi-F2371C", "fipi-5D4288",
+    "fipi-3575E3", "fipi-0696F4", "fipi-058292", "fipi-59ADFD", "fipi-886396",
+    "fipi-C22347", "fipi-2395B7", "fipi-B5FDE6", "fipi-2AA554", "fipi-1E1074",
+    "fipi-0B8F05", "fipi-0A2D68", "fipi-E2CFAA", "fipi-547235", "fipi-9D1424",
+    "fipi-8B0DA5", "fipi-C07F77", "fipi-2F1EF5", "fipi-D8A25C", "fipi-28ED89",
+    "fipi-23FDA1", "fipi-754B65", "fipi-C6B277", "fipi-0D9BF7", "fipi-F4EC31",
+    "fipi-1AAB45", "fipi-682380",
+  ];
+
+  const GEO_TAIL_RE =
+    /\?\s+(?:океан|море|край|область|Республика|горы|залив|низменность|возвышенность|магистраль|автономный\s+округ)\s*$/i;
+
+  it("42 short-задания без гео/админ. хвоста после ?", () => {
+    expect(GEO_TAIL_IDS).toHaveLength(42);
+    const byId = new Map(TASKS.map((t) => [t.id, t]));
+    const bad = GEO_TAIL_IDS.filter((id) => {
+      const t = byId.get(id);
+      return !t || t.type !== "short" || GEO_TAIL_RE.test(t.q);
+    });
+    expect(bad).toEqual([]);
+  });
+
+  it("Катрина (fipi-2D658A): вопрос без хвоста «океан»", () => {
+    const t = TASKS.find((x) => x.id === "fipi-2D658A");
+    expect(t.q).toBe(
+      "Над акваторией какого океана возник ураган, о котором говорится в тексте?",
+    );
+    expect(t.answer).toBe("Атлантический");
+  });
+
+  it("short number: нет бланкового хвоста «. %» (табличный « %» после цифр — ок)", () => {
+    const bad = TASKS.filter(
+      (t) => t.type === "short" && t.format === "number" && /\.\s*%\s*$/.test(t.q),
+    ).map((t) => t.id);
+    expect(bad).toEqual([]);
+  });
+});
