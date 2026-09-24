@@ -5,14 +5,26 @@ import { norm, shuffle, isTaskRight } from "../utils.js";
 
 const PASSAGE_INTRO_RE = /^Прочитайте текст и выполните задания\.?\s*/;
 
+// Бланковые ярлыки ФИПИ после «?» (строка ответа на бланке, не часть вопроса).
+// Whitelist: только географические/админ. типы; answer в банке их не содержит.
+const BLANK_TAIL_LABELS =
+  "океан|море|край|область|Республика|горы|залив|низменность|возвышенность|магистраль|автономный\\s+округ";
+const BLANK_TAIL_RE = new RegExp(`\\?\\s+(?:${BLANK_TAIL_LABELS})\\s*$`, "i");
+
 // Некоторые задания хранят перечисление "1) А 2) Б 3) В" одной строкой без
 // переносов (так исходно отдано FIPI) — разносим по строкам для читаемости.
 // Декоративная нумерация без содержимого (варианты-картинки уже отрисованы
 // отдельно, см. optionImages) вида "1) 2) 3) 4)" — просто убираем.
-function formatQuestionText(q) {
+// Бланковые хвосты («? океан», «. %») срезаем только при показе — data.js не трогаем.
+export function formatQuestionText(q) {
   if (!q) return q;
   let out = q.replace(/\s*(?:\d\)\s*){2,}$/, (m) => (/[^\d)\s]/.test(m) ? m : ""));
   out = out.replace(/\s(\d\))/g, "\n$1");
+  // «…в тексте? океан» → «…в тексте?»
+  out = out.replace(BLANK_TAIL_RE, "?");
+  // Единица измерения на бланке после инструкции («…до целого числа. %»).
+  // Только «. %» — голый « %» после цифр таблицы (%-столбец) не трогаем.
+  out = out.replace(/\.\s*%\s*$/, ".");
   return out.trim();
 }
 
@@ -436,7 +448,7 @@ export function TaskCard({ task, answered, right, single, setSingle, multi, togg
             onChange={(e) => setText(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && onCheck()}
             disabled={answered}
-            placeholder="Впиши ответ и нажми Проверить"
+            placeholder=""
             className={`w-full px-4 py-3 rounded-xl border-2 outline-none text-slate-800 ${answered ? (right ? "border-green-500 bg-green-50" : "border-rose-400 bg-rose-50") : "border-slate-300 focus:border-green-500"}`}
           />
           {answered && !right && (
