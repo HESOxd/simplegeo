@@ -1,5 +1,5 @@
-// Срез бланковых хвостов ФИПИ при показе вопроса (formatQuestionText).
-// data.js не правим — только отображение.
+// Страховка: срез бланковых хвостов ФИПИ при показе (formatQuestionText).
+// В data.js хвосты уже срезаны точечно; этот слой спасёт при перегенерации.
 
 import { describe, it, expect } from "vitest";
 import { formatQuestionText } from "../src/pages/Trainer.jsx";
