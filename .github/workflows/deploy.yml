@@ -12,7 +12,11 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
+    # Версия закреплена: ubuntu-latest с 19.10.2026 переезжает на Ubuntu 26, и
+    # выкладка могла бы сломаться без предупреждения (aws-cli, сертификаты).
+    # GitHub держит две последние LTS — 24.04 будет доступна примерно до 2028;
+    # переезд на 26.04 сделаем сами, проверив выкладку.
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
