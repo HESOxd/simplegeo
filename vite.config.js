@@ -7,4 +7,9 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   base: "/",
+  // Тесты — только из tests/. Без этого vitest находит и тесты вложенных копий
+  // проекта (например, simplegeo/simplegeo/) и счёт удваивается.
+  test: {
+    include: ["tests/**/*.test.js"],
+  },
 });
