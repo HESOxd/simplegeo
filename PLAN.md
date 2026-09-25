@@ -32,7 +32,8 @@
 |---|---|
 | Фронтенд | React 18 + Vite 5 + Tailwind 3 |
 | Маршрутизация | react-router-dom 6 (`BrowserRouter`) |
-| Шрифты | Manrope + Unbounded, **самохостинг** через `@fontsource` (не CDN Google) |
+| Шрифты | Science Gothic 800 (заголовки) · Onest (текст) · Tektur 600 (цифры), **самохостинг** из `src/brand/fonts/` (не CDN Google) |
+| Бренд-система | Токены, логотип, иконки, маскот — [docs/brand/BRAND_GUIDELINES.md](docs/brand/BRAND_GUIDELINES.md), источник истины по визуалу |
 | Бэкенд | **нет** — сайт полностью статический |
 | Хостинг | Selectel, объектное хранилище S3 (Россия) |
 | Домен | `simplegeo.ru`, apex → www через Cloudflare (только редирект) |

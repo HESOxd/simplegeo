@@ -19,11 +19,11 @@ export default function Variant() {
   if (!deck) {
     return (
       <Shell>
-        <Link to="/tasks" className="text-sm text-slate-500 hover:text-slate-700 mb-4 inline-block">← К тренажёру по разделам</Link>
+        <Link to="/tasks" className="text-sm text-ink-muted hover:text-ink mb-4 inline-block">← К тренажёру по разделам</Link>
         <div className="mb-8">
-          <p className="text-green-700 font-semibold tracking-wide text-sm uppercase">ОГЭ · География</p>
-          <h1 className="text-3xl font-bold text-slate-900 mt-1">Полный вариант</h1>
-          <p className="text-slate-500 mt-2">
+          <p className="font-data text-label text-brand uppercase">ОГЭ · География</p>
+          <h1 className="text-3xl font-bold text-ink mt-1">Полный вариант</h1>
+          <p className="text-ink-muted mt-2">
             30 заданий, как в настоящем варианте ОГЭ. Без таймера — в конце подробный разбор
             каждого ответа: что верно, что нет, и как правильно.
           </p>

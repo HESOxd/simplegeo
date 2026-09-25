@@ -3,6 +3,8 @@ import { Link, useSearchParams } from "react-router-dom";
 import { TASKS } from "../data.js";
 import { buildPositionPools, POSITION_TOPIC } from "../positionClassifier.js";
 import { shuffle, isTaskRight } from "../utils.js";
+import { useTaskScreen } from "../brand/PageBackground.jsx";
+import { MASCOT } from "../brand/mascot.js";
 import { Shell, Chip, TaskCard, ProgressBar, PrimaryButton, DarkButton } from "./Trainer.jsx";
 
 // Тренировка по конкретному номеру задания (1-30), как на sdamgia —
@@ -24,6 +26,7 @@ export default function ByPosition() {
   const pools = useMemo(() => buildPositionPools(TASKS), []);
   const [searchParams] = useSearchParams();
   const [screen, setScreen] = useState(() => initialFromQuery(searchParams).screen); // grid | setup | quiz | result
+  useTaskScreen(screen === "quiz"); // под текстом задания изолиний нет
   const [pos, setPos] = useState(() => initialFromQuery(searchParams).pos);
   const [count, setCount] = useState(10);
 
@@ -95,11 +98,11 @@ export default function ByPosition() {
   if (screen === "grid") {
     return (
       <Shell>
-        <Link to="/tasks" className="text-sm text-slate-500 hover:text-slate-700 mb-4 inline-block">← К тренажёру по разделам</Link>
+        <Link to="/tasks" className="text-sm text-ink-muted hover:text-ink mb-4 inline-block">← К тренажёру по разделам</Link>
         <div className="mb-6">
-          <p className="text-green-700 font-semibold tracking-wide text-sm uppercase">ОГЭ · География</p>
-          <h1 className="text-3xl font-bold text-slate-900 mt-1">По номеру задания</h1>
-          <p className="text-slate-500 mt-2">
+          <p className="font-data text-label text-brand uppercase">ОГЭ · География</p>
+          <h1 className="text-3xl font-bold text-ink mt-1">По номеру задания</h1>
+          <p className="text-ink-muted mt-2">
             Выбери номер — потренируешься только на заданиях именно этого типа, как на настоящем экзамене под этим номером.
           </p>
         </div>
@@ -111,21 +114,21 @@ export default function ByPosition() {
                 key={p}
                 onClick={() => n > 0 && openPos(p)}
                 disabled={n === 0}
-                className={`w-full flex items-center gap-3 rounded-xl border px-3.5 py-3 text-left transition-colors ${
+                className={`w-full flex items-center gap-3 rounded-lg border px-3.5 py-3 text-left transition-colors ${
                   n === 0
-                    ? "border-slate-100 text-slate-300 cursor-not-allowed"
-                    : "border-slate-200 bg-white hover:border-green-400 hover:bg-green-50/40"
+                    ? "border-line text-ink-muted cursor-not-allowed"
+                    : "border-line bg-surface hover:border-line-strong"
                 }`}
               >
                 <span
-                  className={`shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold ${
-                    n === 0 ? "bg-slate-50 text-slate-300" : "bg-slate-100 text-slate-700"
+                  className={`shrink-0 w-8 h-8 rounded-sm flex items-center justify-center text-sm font-bold ${
+                    n === 0 ? "bg-sunk text-ink-muted" : "bg-sunk text-ink"
                   }`}
                 >
                   {p}
                 </span>
-                <span className="flex-1 text-sm font-medium text-slate-900 leading-snug">{POSITION_TOPIC[p]}</span>
-                <span className="shrink-0 text-xs text-slate-400">{n}</span>
+                <span className="flex-1 text-sm font-medium text-ink leading-snug">{POSITION_TOPIC[p]}</span>
+                <span className="shrink-0 text-xs text-ink-muted">{n}</span>
               </button>
             );
           })}
@@ -139,13 +142,13 @@ export default function ByPosition() {
     const options = [5, 10, 20, "all"].filter((n) => n === "all" || n < pool.length);
     return (
       <Shell>
-        <button onClick={() => setScreen("grid")} className="text-sm text-slate-500 hover:text-slate-700 mb-4 inline-block">← Все номера</button>
+        <button onClick={() => setScreen("grid")} className="text-sm text-ink-muted hover:text-ink mb-4 inline-block">← Все номера</button>
         <div className="mb-8">
-          <p className="text-green-700 font-semibold tracking-wide text-sm uppercase">Задание {pos}</p>
-          <h1 className="text-2xl font-bold text-slate-900 mt-1">{POSITION_TOPIC[pos]}</h1>
-          <p className="text-slate-500 mt-2">В базе {pool.length} заданий этого типа.</p>
+          <p className="font-data text-label text-brand uppercase">Задание {pos}</p>
+          <h1 className="text-2xl font-bold text-ink mt-1">{POSITION_TOPIC[pos]}</h1>
+          <p className="text-ink-muted mt-2">В базе {pool.length} заданий этого типа.</p>
         </div>
-        <p className="text-sm font-medium text-slate-700 mb-2">Сколько вопросов</p>
+        <p className="text-sm font-medium text-ink mb-2">Сколько вопросов</p>
         <div className="flex flex-wrap gap-2 mb-8">
           {options.map((n) => (
             <Chip key={n} active={count === n} onClick={() => setCount(n)}>{n === "all" ? "Все" : n}</Chip>
@@ -162,13 +165,13 @@ export default function ByPosition() {
     return (
       <Shell>
         <div className="text-center py-6">
-          <img src="/mascot/finish.png" alt="" className="w-24 h-24 object-contain mx-auto mb-1" />
-          <p className="text-sm font-semibold uppercase tracking-wide text-green-700">Задание {pos} · Результат</p>
-          <p className="mt-3 text-6xl font-bold text-slate-900">{correctCount}<span className="text-2xl text-slate-400">/{deck.length}</span></p>
-          <p className="mt-1 text-lg text-slate-500">{Math.round((correctCount / deck.length) * 100)}% верных</p>
+          <img src={MASCOT.finish} alt="" className="w-24 h-24 object-contain mx-auto mb-1" />
+          <p className="font-data text-label uppercase text-brand">Задание {pos} · Результат</p>
+          <p className="mt-3 text-6xl font-bold text-ink">{correctCount}<span className="text-2xl text-ink-muted">/{deck.length}</span></p>
+          <p className="mt-1 text-lg text-ink-muted">{Math.round((correctCount / deck.length) * 100)}% верных</p>
           <div className="mt-8 flex gap-3">
             <PrimaryButton onClick={start} className="flex-1 py-3">Ещё раз</PrimaryButton>
-            <button onClick={() => setScreen("grid")} className="flex-1 bg-white border border-slate-300 hover:bg-slate-50 text-slate-800 font-semibold py-3 rounded-xl transition-colors">Все номера</button>
+            <button onClick={() => setScreen("grid")} className="flex-1 bg-surface border border-line-strong hover:bg-sunk text-ink font-semibold py-3 rounded-md transition-colors">Все номера</button>
           </div>
         </div>
       </Shell>
@@ -180,7 +183,7 @@ export default function ByPosition() {
   return (
     <Shell>
       <div className="mb-4">
-        <div className="flex justify-between text-sm text-slate-500 mb-2">
+        <div className="flex justify-between font-data font-semibold text-sm tabular-nums text-ink-muted mb-2">
           <span>Задание {pos} · {idx + 1} из {deck.length}</span>
           <span>Верно: {correctCount}</span>
         </div>

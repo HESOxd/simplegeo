@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { isTaskRight } from "./utils.js";
+import { useTaskScreen } from "./brand/PageBackground.jsx";
+import { MASCOT } from "./brand/mascot.js";
 import { TaskCard, Shell, ProgressBar, PrimaryButton, DarkButton } from "./pages/Trainer.jsx";
 
 function loadProgress(key) {
@@ -34,6 +36,9 @@ export default function VariantRunner({ deck, backTo, onRestart, persistKey, ren
     .filter((a) => a.task);
 
   const [screen, setScreen] = useState(saved?.screen || "quiz");
+  // Под текстом задания изолиний нет (брендбук). Задания видны при прохождении
+  // и в разборе; у диагностики вместо разбора свой итог без заданий.
+  useTaskScreen(!(screen === "review" && typeof renderResult === "function"));
   const [pos, setPos] = useState(saved?.pos || 0);
   const [answers, setAnswers] = useState(restoredAnswers);
 
@@ -101,30 +106,30 @@ export default function VariantRunner({ deck, backTo, onRestart, persistKey, ren
     return (
       <Shell>
         <div className="text-center mb-8">
-          <img src="/mascot/finish.png" alt="" className="w-24 h-24 object-contain mx-auto mb-1" />
-          <p className="text-sm font-semibold uppercase tracking-wide text-green-700">Результат варианта</p>
-          <p className="mt-3 text-6xl font-bold text-slate-900">{correctCount}<span className="text-2xl text-slate-400">/{answers.length}</span></p>
-          <p className="mt-1 text-lg text-slate-500">{pct}% верных</p>
+          <img src={MASCOT.finish} alt="" className="w-24 h-24 object-contain mx-auto mb-1" />
+          <p className="font-data text-label uppercase text-brand">Результат варианта</p>
+          <p className="mt-3 text-6xl font-bold text-ink">{correctCount}<span className="text-2xl text-ink-muted">/{answers.length}</span></p>
+          <p className="mt-1 text-lg text-ink-muted">{pct}% верных</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
           {answers.map((a, i) => (
-            <div key={i} className={`rounded-xl border-2 p-3 ${a.right ? "border-green-200 bg-green-50/40" : "border-rose-200 bg-rose-50/40"}`}>
+            <div key={i} className={`rounded-lg border-2 p-3 ${a.right ? "border-brand-100 bg-brand-100/40" : "border-wrong bg-wrong-100/40"}`}>
               <div className="flex items-start justify-between gap-3">
-                <p className="text-sm font-medium text-slate-800">{i + 1}. {a.task.q}</p>
-                <span className={`shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full ${a.right ? "bg-green-400 text-slate-900" : "bg-rose-500 text-white"}`}>
+                <p className="text-sm font-medium text-ink">{i + 1}. {a.task.q}</p>
+                <span className={`shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full ${a.right ? "bg-brand-100 text-brand-800" : "bg-wrong-100 text-wrong"}`}>
                   {a.right ? "верно" : "неверно"}
                 </span>
               </div>
               {!a.right && a.task.type === "essay" && (
-                <div className="mt-2 p-3 rounded-lg bg-white border border-slate-200">
-                  <p className="text-xs font-semibold text-green-700 uppercase tracking-wide mb-1">Эталонный ответ</p>
-                  <p className="text-sm text-slate-700 leading-relaxed">{a.task.answer}</p>
+                <div className="mt-2 p-3 rounded-md bg-surface border border-line">
+                  <p className="font-data text-label text-brand uppercase mb-1">Эталонный ответ</p>
+                  <p className="text-sm text-ink leading-relaxed">{a.task.answer}</p>
                 </div>
               )}
               {!a.right && a.task.type !== "essay" && (
-                <p className="text-sm text-slate-600 mt-2">
-                  Правильный ответ: <b className="text-green-700">
+                <p className="text-sm text-ink-muted mt-2">
+                  Правильный ответ: <b className="text-brand">
                     {a.task.type === "short" ? (Array.isArray(a.task.answer) ? a.task.answer.join(" / ") : a.task.answer) :
                      a.task.type === "sequence" ? a.task.answer :
                      a.task.type === "single" ? (a.task.options ? a.task.options[a.task.correct] : `вариант ${a.task.correct + 1}`) :
@@ -140,7 +145,7 @@ export default function VariantRunner({ deck, backTo, onRestart, persistKey, ren
           {onRestart && (
             <PrimaryButton onClick={onRestart} className="flex-1 py-3">Новый вариант</PrimaryButton>
           )}
-          <Link to={backTo} className="flex-1 text-center bg-white border border-slate-300 hover:bg-slate-50 text-slate-800 font-semibold py-3 rounded-xl transition-colors">Назад</Link>
+          <Link to={backTo} className="flex-1 text-center bg-surface border border-line-strong hover:bg-sunk text-ink font-semibold py-3 rounded-md transition-colors">Назад</Link>
         </div>
       </Shell>
     );
@@ -152,7 +157,7 @@ export default function VariantRunner({ deck, backTo, onRestart, persistKey, ren
   return (
     <Shell>
       <div className="mb-4">
-        <div className="flex justify-between text-sm text-slate-500 mb-2">
+        <div className="flex justify-between font-data font-semibold text-sm tabular-nums text-ink-muted mb-2">
           <span>Задание {pos + 1} из {deck.length}</span>
           <span>Верно: {answers.filter((a) => a.right).length}</span>
         </div>

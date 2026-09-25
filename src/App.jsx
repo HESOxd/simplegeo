@@ -9,6 +9,7 @@ import Diagnostic, { DiagnosticResultPage } from "./pages/Diagnostic.jsx";
 import About from "./pages/About.jsx";
 import Course from "./pages/Course.jsx";
 import NotFound from "./pages/NotFound.jsx";
+import { PageBackgroundProvider } from "./brand/PageBackground.jsx";
 
 const NAV = [
   { to: "/tasks", label: "Задания и варианты" },
@@ -16,13 +17,18 @@ const NAV = [
   { to: "/course", label: "Курс" },
 ];
 
+// Шапка — чернила (#1C211D), выбрано 24.09.2026 из четырёх вариантов (бумага,
+// белая, чернильная, зелёная). Логотип — официальная версия «на тёмном» (белый
+// «simple», зелёный #5CC48A «geo»), обрезанная без охранного поля, как -tight.
+// Меню: активный пункт белый, остальные line-strong (10,2:1); полоска под
+// активным — brand-400 (7,6:1): обычный brand на чернилах даёт 2,98:1.
 function TopNav() {
   const { pathname } = useLocation();
   return (
-    <div className="relative z-10 bg-white border-b border-slate-200">
+    <div className="relative z-10 bg-ink">
       <div className="max-w-6xl mx-auto flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-6 px-4">
         <Link to="/tasks" className="flex-shrink-0 pt-3 sm:py-2.5">
-          <img src="/logo.png" alt="SimpleGeo" className="h-5 sm:h-6 w-auto" />
+          <img src="/brand/logo/simplegeo-wordmark-on-dark-tight.svg" alt="SimpleGeo" className="block h-5 sm:h-6 w-auto" />
         </Link>
         <div className="flex sm:flex-1 sm:justify-center sm:gap-2">
           {NAV.map((item) => {
@@ -32,15 +38,12 @@ function TopNav() {
                 key={item.to}
                 to={item.to}
                 className={`relative flex-1 sm:flex-none px-1 sm:px-4 text-center text-sm font-medium py-3.5 transition-colors whitespace-nowrap ${
-                  active ? "text-slate-900" : "text-slate-500 hover:text-slate-800"
+                  active ? "text-white" : "text-line-strong hover:text-white"
                 }`}
               >
                 {item.label}
                 {active && (
-                  <span
-                    className="absolute left-0 right-0 -bottom-px h-[3px] rounded-full"
-                    style={{ background: "linear-gradient(90deg, #86efac, #16a34a)" }}
-                  />
+                  <span className="absolute left-0 right-0 -bottom-px h-[3px] rounded-full bg-brand-400" />
                 )}
               </Link>
             );
@@ -53,13 +56,10 @@ function TopNav() {
 
 export default function App() {
   return (
-    <div
-      className="min-h-screen"
-      style={{
-        background: "linear-gradient(to top right, #bfe8b4 0%, #e3f5da 45%, #ffffff 75%)",
-      }}
-    >
+    <PageBackgroundProvider>
+    <div className="min-h-screen bg-paper">
       <TopNav />
+      <div className="relative">
       <Routes>
         <Route path="/" element={<Navigate to="/tasks" replace />} />
         <Route path="/tasks" element={<Trainer />} />
@@ -74,6 +74,8 @@ export default function App() {
         <Route path="/course" element={<Course />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
+      </div>
     </div>
+    </PageBackgroundProvider>
   );
 }

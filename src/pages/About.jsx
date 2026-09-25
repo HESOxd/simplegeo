@@ -24,30 +24,30 @@ export default function About() {
       <div className="relative max-w-6xl mx-auto p-4 py-10">
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
         <div className="lg:col-span-3">
-          <h1 className="text-4xl sm:text-5xl font-extrabold text-slate-900 leading-tight" style={{ fontFamily: "'Unbounded', sans-serif" }}>Юрий</h1>
-          <p className="text-lg text-slate-500 mt-2">Репетитор по географии, ОГЭ/ЕГЭ</p>
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-ink leading-tight">Юрий</h1>
+          <p className="text-lg text-ink-muted mt-2">Репетитор по географии, ОГЭ/ЕГЭ</p>
           <div className="mt-6 max-w-2xl space-y-4">
             {BIO.map((paragraph, i) => (
-              <p key={i} className="text-slate-700 leading-relaxed text-lg">{paragraph}</p>
+              <p key={i} className="text-ink leading-relaxed text-lg">{paragraph}</p>
             ))}
           </div>
 
           <div className="grid grid-cols-3 gap-4 mt-10 max-w-lg">
             {EXPERIENCE.map((e, i) => (
               <div key={i}>
-                <p className="text-3xl sm:text-4xl font-bold text-green-700">{e.number}</p>
-                <p className="text-sm text-slate-500 mt-1">{e.label}</p>
+                <p className="font-data font-semibold text-3xl sm:text-4xl tabular-nums text-brand">{e.number}</p>
+                <p className="text-sm text-ink-muted mt-1">{e.label}</p>
               </div>
             ))}
           </div>
 
           <div className="flex flex-wrap gap-3 mt-10">
             <a href={TELEGRAM_CONTACT} target="_blank" rel="noopener noreferrer"
-              className="text-center bg-slate-900 hover:bg-slate-800 text-white font-medium px-6 py-3 rounded-xl transition-[transform,box-shadow,background-color] duration-100 shadow-[0_4px_0_0_#020617] active:shadow-[0_1px_0_0_#020617] active:translate-y-[3px]">
+              className="text-center bg-brand hover:bg-brand-800 text-white font-bold px-6 py-3 rounded-md shadow-step active:shadow-step-pressed active:translate-y-[2px] transition-[transform,box-shadow,background-color] duration-[120ms] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-brand-300 focus-visible:outline-offset-[3px]">
               Написать в Telegram
             </a>
             <a href={TELEGRAM_CHANNEL} target="_blank" rel="noopener noreferrer"
-              className="text-center bg-white border border-slate-300 hover:bg-slate-50 text-slate-800 font-medium px-6 py-3 rounded-xl transition-colors">
+              className="text-center bg-surface hover:bg-sunk text-ink font-bold px-6 py-3 rounded-md shadow-secondary active:shadow-secondary-pressed active:translate-y-[2px] transition-[transform,box-shadow,background-color] duration-[120ms] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-brand-300 focus-visible:outline-offset-[3px]">
               Подписаться на канал
             </a>
           </div>
@@ -55,9 +55,9 @@ export default function About() {
 
         <div className="lg:col-span-2 order-first lg:order-last">
           {PHOTO_URL ? (
-            <img src={PHOTO_URL} alt="Фото преподавателя" className="w-full aspect-[4/5] object-cover rounded-2xl border border-slate-200" />
+            <img src={PHOTO_URL} alt="Фото преподавателя" className="w-full aspect-[4/5] object-cover rounded-lg border border-line" />
           ) : (
-            <div className="w-full aspect-[4/5] rounded-2xl bg-green-50 border border-green-100 flex items-center justify-center text-green-600 text-6xl font-bold">
+            <div className="w-full aspect-[4/5] rounded-lg bg-brand-100 border border-brand-100 flex items-center justify-center text-brand text-6xl font-bold">
               Ю
             </div>
           )}

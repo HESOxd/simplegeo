@@ -1,11 +1,33 @@
+/* Бренд-токены SimpleGeo: CSS-переменные, @font-face и классы типографики.
+   tokens.css сам подтягивает fonts.css, тот — woff2 из src/brand/fonts/.
+   Источник истины — docs/brand/BRAND_GUIDELINES.md. */
+@import "./brand/tokens.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-  font-family: "Manrope", sans-serif;
-  font-weight: 700;
+  background: var(--sg-paper);
+  color: var(--sg-ink);
+  font-family: var(--sg-font-body);
+  font-weight: 400;
   /* На маке горизонтальный свайп трекпадом без этого триггерит "назад/вперёд" в
      браузере и визуально утаскивает страницу в сторону. */
   overscroll-behavior-x: none;
+}
+
+/* Заголовки — Science Gothic 800. Брендбук запрещает его мельче 20 px:
+   широкий шрифт теряет характер, поэтому мелкие заголовки набираются Onest. */
+h1, h2, h3 {
+  font-family: var(--sg-font-display);
+  font-weight: 800;
+}
+
+/* Цифры, координаты, счётчики — Tektur, с моноширинными цифрами, чтобы
+   «7 из 10» не дёргалось при смене числа. */
+.sg-num {
+  font-family: var(--sg-font-data);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }

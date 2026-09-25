@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { DEMO_2027 } from "../data/demo2027.js";
 import { isTaskRight } from "../utils.js";
-import { Shell, TaskCard, PrimaryButton, DarkButton, Chip } from "./Trainer.jsx";
+import { useTaskScreen } from "../brand/PageBackground.jsx";
+import { Shell, TaskCard, PrimaryButton, SecondaryButton, Chip } from "./Trainer.jsx";
 
 // Официальный демо-вариант ОГЭ 2027 (ФИПИ, проект) — один длинный список,
 // который просто пролистывают (как настоящий бланк / как на magellan.education),
@@ -27,6 +28,7 @@ function isFilled(a) {
 }
 
 export default function Demo2027() {
+  useTaskScreen(true); // вся страница — задания, изолиний под ними нет (брендбук)
   const saved = loadState();
   const [mode, setMode] = useState(saved?.mode || "instant"); // "instant" | "end"
   const [answers, setAnswers] = useState(saved?.answers || {});
@@ -74,34 +76,34 @@ export default function Demo2027() {
 
   return (
     <Shell>
-      <Link to="/tasks" className="text-sm text-slate-500 hover:text-slate-700 mb-4 inline-block">← К тренажёру по разделам</Link>
+      <Link to="/tasks" className="text-sm text-ink-muted hover:text-ink mb-4 inline-block">← К тренажёру по разделам</Link>
 
       <div className="mb-6">
-        <p className="text-green-700 font-semibold tracking-wide text-sm uppercase">Официальный документ ФИПИ</p>
-        <h1 className="text-3xl font-bold text-slate-900 mt-1">Демо-версия ОГЭ 2027</h1>
-        <p className="text-slate-500 mt-2 leading-relaxed">
+        <p className="font-data text-label text-brand uppercase">Официальный документ ФИПИ</p>
+        <h1 className="text-3xl font-bold text-ink mt-1">Демо-версия ОГЭ 2027</h1>
+        <p className="text-ink-muted mt-2 leading-relaxed">
           Все 30 заданий демонстрационного варианта ФИПИ на 2027 год — плюс оба примера там,
           где демоверсия показывает по два варианта задания (4, 20, 21, 22, 27). Всего 35 заданий.
           Пролистай и решай в любом порядке.
         </p>
-        <p className="text-xs text-slate-400 mt-3">
+        <p className="text-xs text-ink-muted mt-3">
           Источник: демонстрационный вариант КИМ ОГЭ 2027 г. по географии, ФИПИ (документ помечен как «проект»,
           итоговый банк заданий может отличаться).
         </p>
       </div>
 
-      <div className="mb-4 bg-white rounded-xl border border-slate-200 p-4">
-        <p className="text-sm font-medium text-slate-700 mb-2">Как проверять ответы</p>
+      <div className="mb-4 bg-surface rounded-lg border border-line p-4">
+        <p className="text-sm font-medium text-ink mb-2">Как проверять ответы</p>
         <div className="flex flex-wrap gap-2">
           <Chip active={mode === "instant"} onClick={() => setMode("instant")}>Сразу по каждому заданию</Chip>
           <Chip active={mode === "end"} onClick={() => setMode("end")}>Только в конце, как на экзамене</Chip>
         </div>
       </div>
 
-      <div className="sticky top-2 z-10 flex items-center justify-between mb-5 bg-white/95 backdrop-blur rounded-xl border border-slate-200 px-4 py-3 shadow-sm">
-        <p className="text-sm text-slate-600">Отвечено: <b className="text-slate-900">{answeredCount}</b>/{DEMO_2027.length}</p>
+      <div className="sticky top-2 z-10 flex items-center justify-between mb-5 bg-surface/95 backdrop-blur rounded-lg border border-line px-4 py-3 shadow-sm">
+        <p className="text-sm text-ink-muted">Отвечено: <b className="text-ink">{answeredCount}</b>/{DEMO_2027.length}</p>
         {showScore && (
-          <p className="text-sm text-slate-600">Верно: <b className="text-green-700">{correctCount}</b>/{revealedTasks.length}</p>
+          <p className="text-sm text-ink-muted">Верно: <b className="text-brand">{correctCount}</b>/{revealedTasks.length}</p>
         )}
       </div>
 
@@ -133,12 +135,12 @@ export default function Demo2027() {
                 kicker={task.kes}
               />
               {mode === "instant" && !answered && (
-                <DarkButton
+                <SecondaryButton
                   onClick={() => canCheck && checkOne(task.id)}
                   className={`mt-3 w-full py-2.5 ${!canCheck ? "opacity-40 pointer-events-none" : ""}`}
                 >
                   {task.type === "essay" ? "Показать ответ" : "Проверить"}
-                </DarkButton>
+                </SecondaryButton>
               )}
             </div>
           );
@@ -151,7 +153,7 @@ export default function Demo2027() {
         )}
         <button
           onClick={resetAll}
-          className={`${mode === "end" && !allRevealed ? "" : "flex-1"} px-5 py-3.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-800 font-semibold rounded-xl transition-colors`}
+          className={`${mode === "end" && !allRevealed ? "" : "flex-1"} px-5 py-3.5 bg-surface border border-line-strong hover:bg-sunk text-ink font-semibold rounded-md transition-colors`}
         >
           Сбросить и начать заново
         </button>

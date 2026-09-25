@@ -1,0 +1,43 @@
+/* SimpleGeo · дизайн-токены v1 · 2026-09
+   Подключение: <link rel="stylesheet" href="tokens/tokens.css"> (fonts.css подтянется сам) */
+@import url('fonts.css');
+:root{
+  /* цвет — палитра */
+  --sg-paper:#F5F4EE; --sg-surface:#FFFFFF; --sg-surface-sunk:#ECEBE3;
+  --sg-ink:#1C211D; --sg-ink-muted:#5B605A; --sg-line:#E1DFD6; --sg-line-strong:#CFCCC1;
+  --sg-green-100:#E2F0E7; --sg-green-300:#9FE0BA; --sg-green-400:#5CC48A; --sg-green-700:#17784A; --sg-green-800:#0F5A36; --sg-green-900:#0B3D25;
+  --sg-mascot:#2E9A5C;
+  --sg-water-100:#E1ECF6; --sg-water-700:#2B6CA3;
+  --sg-error-100:#FBE7E3; --sg-error-700:#C0352B;
+  --sg-warning-100:#FBEFD6; --sg-warning-700:#9A6200;
+  /* цвет — роли */
+  --sg-bg:var(--sg-paper); --sg-card:var(--sg-surface); --sg-text:var(--sg-ink); --sg-text-muted:var(--sg-ink-muted);
+  --sg-brand:var(--sg-green-700); --sg-brand-hover:var(--sg-green-800); --sg-brand-step:var(--sg-green-900); --sg-on-brand:#FFFFFF;
+  --sg-correct:var(--sg-green-700); --sg-correct-bg:var(--sg-green-100);
+  --sg-wrong:var(--sg-error-700); --sg-wrong-bg:var(--sg-error-100);
+  --sg-info:var(--sg-water-700); --sg-info-bg:var(--sg-water-100);
+  --sg-iso-minor:rgba(28,33,29,.20); --sg-iso-major:rgba(23,120,74,.90);
+  /* шрифты */
+  --sg-font-display:'Science Gothic','Onest',system-ui,sans-serif;
+  --sg-font-body:'Onest',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --sg-font-data:'Tektur','Onest',ui-monospace,monospace;
+  /* форма */
+  --sg-r-xs:4px; --sg-r-sm:6px; --sg-r-md:10px; --sg-r-lg:12px; --sg-r-xl:16px; --sg-r-pill:999px;
+  --sg-shadow-step:0 4px 0 var(--sg-green-900); --sg-shadow-step-ink:0 4px 0 var(--sg-ink);
+  --sg-shadow-card:0 1px 2px rgba(28,33,29,.05); --sg-shadow-pop:0 8px 24px rgba(28,33,29,.08);
+  --sg-ease:cubic-bezier(.2,.7,.3,1); --sg-fast:120ms; --sg-base:180ms;
+  --sg-container:1120px; --sg-content:720px;
+}
+/* типографика: классы-роли */
+.sg-display{font:800 clamp(36px,6vw,56px)/1 var(--sg-font-display);letter-spacing:-.02em}
+.sg-h1{font:800 clamp(30px,4.5vw,40px)/1.05 var(--sg-font-display);letter-spacing:-.015em}
+.sg-h2{font:800 clamp(24px,3.4vw,30px)/1.1 var(--sg-font-display);letter-spacing:-.01em}
+.sg-h3{font:700 clamp(20px,2.4vw,22px)/1.2 var(--sg-font-display)}
+.sg-lead{font:400 clamp(17px,2vw,19px)/1.5 var(--sg-font-body)}
+.sg-body{font:400 16px/1.6 var(--sg-font-body)}
+.sg-small{font:400 14px/1.5 var(--sg-font-body)}
+.sg-caption{font:500 12px/1.4 var(--sg-font-body)}
+.sg-label{font:600 13px/1 var(--sg-font-data);letter-spacing:.04em;text-transform:uppercase}
+.sg-data{font:600 17px/1.2 var(--sg-font-data);font-variant-numeric:tabular-nums}
+.sg-data-xl{font:600 clamp(24px,3vw,28px)/1.1 var(--sg-font-data)}
+.sg-accent{color:var(--sg-brand)}

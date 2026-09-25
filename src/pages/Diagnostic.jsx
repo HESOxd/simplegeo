@@ -3,7 +3,9 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { TASKS } from "../data.js";
 import VariantRunner from "../VariantRunner.jsx";
 import NotFound from "./NotFound.jsx";
-import { Shell, PrimaryButton } from "./Trainer.jsx";
+import { Shell, PrimaryButton, SecondaryButton } from "./Trainer.jsx";
+import { Icon } from "../brand/Icon.jsx";
+import { MASCOT } from "../brand/mascot.js";
 import {
   DIAGNOSTIC_BLOCKS,
   DIAGNOSTIC_TOTAL,
@@ -30,10 +32,37 @@ const SHORT_NAME = {
   regions: "регионы",
 };
 
+// Светофор блока — три семантических состояния бренда (correct / warning /
+// wrong) в раскладке sg-feedback: светлая подложка + полоса слева 4 px.
+//
+// Состояние продублировано словом и иконкой, а не только цветом: брендбук —
+// «состояния всегда дублируются иконкой ✓/✕ и словом», ~8% мужчин плохо
+// различают красный и зелёный. У бренда нет иконки-предупреждения, поэтому у
+// жёлтого только слово — этого достаточно, чтобы не опираться на цвет.
 const LIGHT_STYLES = {
-  green: { border: "border-green-200", bg: "bg-green-50/50", badge: "bg-green-400 text-slate-900" },
-  yellow: { border: "border-amber-200", bg: "bg-amber-50/50", badge: "bg-amber-300 text-slate-900" },
-  red: { border: "border-rose-200", bg: "bg-rose-50/40", badge: "bg-rose-500 text-white" },
+  green: {
+    card: "bg-brand-100 shadow-[inset_4px_0_0_var(--sg-correct)]",
+    badge: "bg-brand text-white",
+    label: "Уверенно",
+    labelColor: "text-brand-800",
+    icon: "check",
+  },
+  yellow: {
+    card: "bg-warn-100 shadow-[inset_4px_0_0_var(--sg-warning-700)]",
+    badge: "bg-warn text-white",
+    label: "Есть ошибка",
+    // не text-warn: #9A6200 на warn-100 даёт 4,47:1 — ниже AA для 13 px.
+    // Жёлтый цвет несут полоса слева и бейдж, слово — чернилами.
+    labelColor: "text-ink",
+    icon: null,
+  },
+  red: {
+    card: "bg-wrong-100 shadow-[inset_4px_0_0_var(--sg-wrong)]",
+    badge: "bg-wrong text-white",
+    label: "Слабое место",
+    labelColor: "text-wrong",
+    icon: "cross",
+  },
 };
 
 const LIGHT_ORDER = { red: 0, yellow: 1, green: 2 };
@@ -119,33 +148,37 @@ export function DiagnosticResult({ result, answers = null, previous = null, onRe
   return (
     <Shell>
       <div className="text-center mb-8">
-        <img src="/mascot/finish.png" alt="" className="w-24 h-24 object-contain mx-auto mb-1" />
-        <p className="text-sm font-semibold uppercase tracking-wide text-green-700">Результат диагностики</p>
-        <p className="mt-3 text-lg text-slate-800 font-medium leading-snug">{headline}</p>
+        <img src={MASCOT.finish} alt="" className="w-24 h-24 object-contain mx-auto mb-1" />
+        <p className="font-data text-label uppercase text-brand">Результат диагностики</p>
+        <p className="mt-3 text-lg text-ink font-medium leading-snug">{headline}</p>
       </div>
 
       <div className="flex flex-col gap-2.5 mb-8">
         {cards.map((c) => {
           const st = LIGHT_STYLES[c.light];
           return (
-            <div key={c.key} className={`rounded-xl border-2 ${st.border} ${st.bg} p-3.5`}>
+            <div key={c.key} className={`rounded-lg ${st.card} p-3.5 pl-5`}>
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="font-semibold text-slate-900">{c.title}</p>
-                  <p className="text-sm text-slate-500 mt-0.5">
+                  <p className={`inline-flex items-center gap-1 font-data font-semibold text-[13px] uppercase tracking-[.04em] ${st.labelColor}`}>
+                    {st.icon && <Icon name={st.icon} className="w-3.5 h-3.5" />}
+                    {st.label}
+                  </p>
+                  <p className="font-semibold text-ink mt-1">{c.title}</p>
+                  <p className="text-sm text-ink-muted mt-0.5">
                     задания №{c.posLabel.join(", ")} · {c.ok}/{c.total}
                   </p>
                   {c.historyNote && (
-                    <p className="text-xs text-slate-500 mt-1">{c.historyNote}</p>
+                    <p className="text-xs text-ink-muted mt-1">{c.historyNote}</p>
                   )}
                 </div>
-                <span className={`shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full ${st.badge}`}>
+                <span className={`shrink-0 font-data font-semibold text-[15px] tabular-nums px-2.5 py-1 rounded-sm ${st.badge}`}>
                   {c.ok}/{c.total}
                 </span>
               </div>
               <Link
                 to={`/tasks/by-number?pos=${c.trainPos}`}
-                className="mt-3 inline-flex text-sm font-semibold text-green-700 hover:text-green-800"
+                className="mt-3 inline-flex text-sm font-semibold text-brand hover:text-brand-800"
               >
                 Тренировать №{c.trainPos} →
               </Link>
@@ -158,26 +191,26 @@ export function DiagnosticResult({ result, answers = null, previous = null, onRe
         href={tgHref}
         target="_blank"
         rel="noopener noreferrer"
-        className="block w-full text-center bg-gradient-to-r from-green-200 to-green-400 hover:from-green-300 hover:to-green-500 text-slate-900 font-semibold py-3.5 rounded-xl transition-[transform,box-shadow,background-color] duration-100 shadow-[0_4px_0_0_#15803d] active:shadow-[0_1px_0_0_#15803d] active:translate-y-[3px] mb-3"
+        className="flex w-full items-center justify-center text-center bg-brand hover:bg-brand-800 text-white font-bold py-3.5 rounded-md shadow-step active:shadow-step-pressed active:translate-y-[2px] transition-[transform,box-shadow,background-color] duration-[120ms] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-brand-300 focus-visible:outline-offset-[3px] mb-3"
       >
         Разобрать результат с Юрием
       </a>
 
       {onRestart && (
-        <PrimaryButton onClick={onRestart} className="w-full py-3 mb-3">
+        <SecondaryButton onClick={onRestart} className="w-full py-3 mb-3">
           Пройти ещё раз
-        </PrimaryButton>
+        </SecondaryButton>
       )}
 
       <button
         type="button"
         onClick={copyLink}
-        className="w-full text-center text-sm font-medium text-slate-600 hover:text-slate-900 py-2"
+        className="w-full text-center text-sm font-medium text-ink-muted hover:text-ink py-2"
       >
         {copied ? "Ссылка скопирована" : "Скопировать ссылку на результат"}
       </button>
 
-      <Link to="/tasks" className="mt-4 block text-center text-sm text-slate-500 hover:text-slate-700">
+      <Link to="/tasks" className="mt-4 block text-center text-sm text-ink-muted hover:text-ink">
         ← К тренажёру
       </Link>
     </Shell>
@@ -252,27 +285,26 @@ export default function Diagnostic() {
         <div className="w-full max-w-4xl flex flex-col py-3">
           <Link
             to="/tasks"
-            className="text-sm text-slate-500 hover:text-slate-700 self-start"
+            className="text-sm text-ink-muted hover:text-ink self-start"
           >
             ← К тренажёру по разделам
           </Link>
 
           <div className="flex-1 flex flex-col items-center justify-center text-center gap-0">
             <img
-              src="/mascot/welcome.png"
+              src={MASCOT.welcome}
               alt=""
               className="w-[150px] h-[150px] sm:w-[170px] sm:h-[170px] md:w-[180px] md:h-[180px] object-contain mb-4"
             />
-            <p className="text-green-700 font-semibold tracking-wide text-sm sm:text-base uppercase">
+            <p className="font-data text-label text-brand uppercase">
               ОГЭ · География
             </p>
             <h1
-              className="text-3xl sm:text-4xl md:text-5xl text-slate-900 mt-2 leading-tight max-w-2xl"
-              style={{ fontFamily: "'Unbounded', sans-serif", fontWeight: 700 }}
+              className="text-3xl sm:text-4xl md:text-5xl text-ink mt-2 leading-tight max-w-2xl"
             >
               Узнай свои слабые места
             </h1>
-            <p className="text-slate-500 mt-3 text-base sm:text-lg leading-snug max-w-xl">
+            <p className="text-ink-muted mt-3 text-base sm:text-lg leading-snug max-w-xl">
               {DIAGNOSTIC_TOTAL} заданий · около 20 минут · отчёт по семи блокам экзамена.
               Без таймера и без прогноза оценки — только карта, где теряются баллы.
             </p>

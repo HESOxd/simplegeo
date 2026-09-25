@@ -38,15 +38,15 @@ export default function WeeklyVariants() {
   if (error) {
     return (
       <Shell>
-        <Link to="/tasks" className="text-sm text-slate-500 hover:text-slate-700 mb-4 inline-block">← К тренажёру по разделам</Link>
-        <p className="text-slate-500">Варианты недели ещё не сгенерированы. Загляни чуть позже.</p>
+        <Link to="/tasks" className="text-sm text-ink-muted hover:text-ink mb-4 inline-block">← К тренажёру по разделам</Link>
+        <p className="text-ink-muted">Варианты недели ещё не сгенерированы. Загляни чуть позже.</p>
       </Shell>
     );
   }
   if (!data) {
     return (
       <Shell>
-        <p className="text-slate-400">Загрузка…</p>
+        <p className="text-ink-muted">Загрузка…</p>
       </Shell>
     );
   }
@@ -65,11 +65,11 @@ export default function WeeklyVariants() {
 
   return (
     <Shell>
-      <Link to="/tasks" className="text-sm text-slate-500 hover:text-slate-700 mb-4 inline-block">← К тренажёру по разделам</Link>
+      <Link to="/tasks" className="text-sm text-ink-muted hover:text-ink mb-4 inline-block">← К тренажёру по разделам</Link>
       <div className="mb-8">
-        <p className="text-green-700 font-semibold tracking-wide text-sm uppercase">ОГЭ · География</p>
-        <h1 className="text-3xl font-bold text-slate-900 mt-1">Варианты недели</h1>
-        <p className="text-slate-500 mt-2">
+        <p className="font-data text-label text-brand uppercase">ОГЭ · География</p>
+        <h1 className="text-3xl font-bold text-ink mt-1">Варианты недели</h1>
+        <p className="text-ink-muted mt-2">
           5 фиксированных вариантов на эту неделю ({data.weekId}) — одинаковые у всех,
           обновляются раз в неделю. Можно начать и продолжить позже с того же места.
         </p>
@@ -82,11 +82,11 @@ export default function WeeklyVariants() {
             <button
               key={i}
               onClick={() => setActiveIndex(i)}
-              className="w-full flex items-center justify-between bg-white rounded-2xl border border-slate-200 hover:border-green-400 hover:bg-green-50/40 transition-colors p-5 text-left"
+              className="w-full flex items-center justify-between bg-surface rounded-lg border border-line hover:border-line-strong transition-colors p-5 text-left"
             >
               <div>
-                <p className="font-semibold text-slate-900">Вариант {i + 1}</p>
-                <p className="text-sm text-slate-500 mt-0.5">
+                <p className="font-semibold text-ink">Вариант {i + 1}</p>
+                <p className="text-sm text-ink-muted mt-0.5">
                   {status?.done
                     ? `Пройден: ${status.score}/${status.total} верных`
                     : status
@@ -94,7 +94,7 @@ export default function WeeklyVariants() {
                     : "30 заданий, ещё не начат"}
                 </p>
               </div>
-              <span className="text-green-700 font-semibold text-sm shrink-0">
+              <span className="text-brand font-semibold text-sm shrink-0">
                 {status?.done ? "Пройти снова →" : status ? "Продолжить →" : "Начать →"}
               </span>
             </button>
