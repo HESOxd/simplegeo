@@ -24,8 +24,12 @@ DIST=./dist
 DEST="s3://${S3_BUCKET}"
 IMMUTABLE="public, max-age=31536000, immutable"
 NOCACHE="no-cache, no-store, must-revalidate"
-# Что сжимаем. index.html и weekly-variants.json не трогаем: они маленькие и
-# заливаются отдельно, с no-cache (см. ниже).
+HOUR="public, max-age=3600"
+# Файлы с постоянным именем, которые меняются, — без годового кэша. Заливаются
+# отдельно, без сжатия (они маленькие), после остальных (см. ниже).
+NOCACHE_FILES=(index.html weekly-variants.json)
+HOUR_FILES=(robots.txt sitemap.xml favicon.ico)
+# Что сжимаем (кроме файлов из списков выше).
 GZ_TYPES=(js css svg json)
 
 s3() { aws s3 "$@" --endpoint-url "$S3_ENDPOINT"; }
@@ -37,8 +41,10 @@ for ext in "${GZ_TYPES[@]}"; do
   GZ_ONLY+=(--include "*.${ext}")
   NOT_GZ+=(--exclude "*.${ext}")
 done
-GZ_ONLY+=(--exclude "index.html" --exclude "weekly-variants.json")
-NOT_GZ+=(--exclude "index.html" --exclude "weekly-variants.json")
+SEPARATE=()
+for f in "${NOCACHE_FILES[@]}" "${HOUR_FILES[@]}"; do SEPARATE+=(--exclude "$f"); done
+GZ_ONLY+=("${SEPARATE[@]}")
+NOT_GZ+=("${SEPARATE[@]}")
 
 # --- проба ---------------------------------------------------------------
 gzip_works() {
@@ -84,7 +90,7 @@ upload_gzip() {
 
 upload_plain() {
   s3 sync "$DIST" "$DEST" ${1+"$1"} \
-    --exclude "index.html" --exclude "weekly-variants.json" \
+    "${SEPARATE[@]}" \
     --cache-control "$IMMUTABLE"
 }
 
@@ -124,6 +130,12 @@ s3 cp "$DIST/index.html" "${DEST}/index.html" --cache-control "$NOCACHE"
 if [ -f "$DIST/weekly-variants.json" ]; then
   s3 cp "$DIST/weekly-variants.json" "${DEST}/weekly-variants.json" --cache-control "$NOCACHE"
 fi
+
+# robots.txt, sitemap.xml, favicon.ico — адрес задан стандартом, переименовать
+# при правке нельзя. Кэш — час: правка дойдёт быстро, а лишних запросов нет.
+for f in "${HOUR_FILES[@]}"; do
+  if [ -f "$DIST/$f" ]; then s3 cp "$DIST/$f" "${DEST}/$f" --cache-control "$HOUR"; fi
+done
 
 FAILED=0
 if [ "$MODE" = gzip ] && ! main_js_ok; then

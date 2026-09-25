@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Routes, Route, Navigate, Link, useLocation } from "react-router-dom";
 import Trainer from "./pages/Trainer.jsx";
 import Variant from "./pages/Variant.jsx";
@@ -10,6 +10,7 @@ import About from "./pages/About.jsx";
 import Course from "./pages/Course.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import { PageBackgroundProvider } from "./brand/PageBackground.jsx";
+import { pageTitle } from "./pageTitles.js";
 
 const NAV = [
   { to: "/tasks", label: "Задания и варианты" },
@@ -54,7 +55,17 @@ function TopNav() {
   );
 }
 
+// Название вкладки меняется вместе со страницей (сайт одностраничный, сам
+// браузер его не поменяет). Список — в pageTitles.js.
+function usePageTitle() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    document.title = pageTitle(pathname);
+  }, [pathname]);
+}
+
 export default function App() {
+  usePageTitle();
   return (
     <PageBackgroundProvider>
     <div className="min-h-screen bg-paper">

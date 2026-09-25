@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Страницы сайта для поисковиков. Новая страница в App.jsx — добавь сюда
+     (tests/sitemap.test.js проверяет, что ни одна не забыта). -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://www.simplegeo.ru/tasks</loc><priority>1.0</priority></url>
+  <url><loc>https://www.simplegeo.ru/tasks/diagnostic</loc><priority>0.9</priority></url>
+  <url><loc>https://www.simplegeo.ru/tasks/variant</loc><priority>0.8</priority></url>
+  <url><loc>https://www.simplegeo.ru/tasks/by-number</loc><priority>0.8</priority></url>
+  <url><loc>https://www.simplegeo.ru/tasks/weekly</loc><priority>0.8</priority></url>
+  <url><loc>https://www.simplegeo.ru/tasks/demo-2027</loc><priority>0.8</priority></url>
+  <url><loc>https://www.simplegeo.ru/course</loc><priority>0.6</priority></url>
+  <url><loc>https://www.simplegeo.ru/about</loc><priority>0.5</priority></url>
+</urlset>

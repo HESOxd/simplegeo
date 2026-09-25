@@ -1,0 +1,7 @@
+# SimpleGeo — тренажёр ОГЭ по географии
+User-agent: *
+Allow: /
+# Результаты диагностики по ссылке (?r=…) — личные, в поиске им не место.
+Disallow: /tasks/diagnostic/result
+
+Sitemap: https://www.simplegeo.ru/sitemap.xml
