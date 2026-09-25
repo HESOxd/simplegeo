@@ -432,29 +432,33 @@ export default function Diagnostic() {
             ← К тренажёру по разделам
           </Link>
 
-          <div className="flex-1 flex flex-col items-center justify-center text-center gap-0">
-            <Mascot
-              name="welcome"
-              className="w-[150px] h-[150px] sm:w-[170px] sm:h-[170px] md:w-[180px] md:h-[180px] object-contain mb-4"
-            />
-            <p className="font-data text-label text-brand uppercase">
-              ОГЭ · География
-            </p>
-            <h1
-              className="text-3xl sm:text-4xl md:text-5xl text-ink mt-2 leading-tight max-w-2xl"
-            >
-              Узнай свои слабые места
-            </h1>
-            <p className="text-ink-muted mt-3 text-base sm:text-lg leading-snug max-w-xl">
-              {DIAGNOSTIC_TOTAL} заданий · около 10–12 минут · отчёт по семи блокам.
-              Правильные ответы покажем после прохождения. Без таймера и без прогноза оценки.
-            </p>
-            <PrimaryButton
-              onClick={() => setStarted(true)}
-              className="w-full max-w-md mt-6 min-h-[3.25rem] px-6 py-3.5 text-lg sm:text-xl font-semibold"
-            >
-              Начать диагностику
-            </PrimaryButton>
+          {/* Белая карточка под текстом: на фоне страницы изолинии, а брендбук
+              запрещает их под текстом без подложки (линия шла через заголовок). */}
+          <div className="flex-1 flex flex-col items-center justify-center py-4">
+            <div className="w-full max-w-2xl flex flex-col items-center text-center bg-surface border border-line rounded-lg shadow-card px-5 py-8 sm:px-10 sm:py-10">
+              <Mascot
+                name="welcome"
+                className="w-[150px] h-[150px] sm:w-[170px] sm:h-[170px] md:w-[180px] md:h-[180px] object-contain mb-4"
+              />
+              <p className="font-data text-label text-brand uppercase">
+                ОГЭ · География
+              </p>
+              <h1
+                className="text-3xl sm:text-4xl md:text-5xl text-ink mt-2 leading-tight max-w-2xl"
+              >
+                Узнай свои слабые места
+              </h1>
+              <p className="text-ink-muted mt-3 text-base sm:text-lg leading-snug max-w-xl">
+                {DIAGNOSTIC_TOTAL} заданий · около 10–12 минут · отчёт по семи блокам.
+                Правильные ответы покажем после прохождения. Без таймера и без прогноза оценки.
+              </p>
+              <PrimaryButton
+                onClick={() => setStarted(true)}
+                className="w-full max-w-md mt-6 min-h-[3.25rem] px-6 py-3.5 text-lg sm:text-xl font-semibold"
+              >
+                Начать диагностику
+              </PrimaryButton>
+            </div>
           </div>
         </div>
       </div>
