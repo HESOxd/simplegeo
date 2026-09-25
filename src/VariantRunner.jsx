@@ -23,13 +23,22 @@ function saveProgress(key, data) {
   }
 }
 
-// Экран прохождения + разбора варианта. Не занимается сборкой deck — это
-// делает вызывающая страница (случайный вариант или вариант недели).
-// persistKey — если задан, прогресс (текущая позиция + ответы) сохраняется
-// в localStorage и восстанавливается при повторном заходе на то же устройство.
-// renderResult — необязательная подмена экрана разбора (для диагностики);
-// по умолчанию — стандартный разбор варианта. Variant/Weekly не передают проп.
-export default function VariantRunner({ deck, backTo, onRestart, persistKey, renderResult }) {
+/**
+ * Экран прохождения + разбора варианта.
+ * revealMode:
+ *   - "instant" (по умолчанию) — «Проверить» → вердикт и эталон, как в Variant/Weekly;
+ *   - "deferred" — без вердикта по ходу; ответ записывается и сразу «Дальше» / к итогам.
+ * renderResult — необязательная подмена экрана после финиша (диагностика).
+ */
+export default function VariantRunner({
+  deck,
+  backTo,
+  onRestart,
+  persistKey,
+  renderResult,
+  revealMode = "instant",
+}) {
+  const deferred = revealMode === "deferred";
   const saved = persistKey ? loadProgress(persistKey) : null;
   const restoredAnswers = (saved?.answers || [])
     .map((a) => ({ ...a, task: deck.find((t) => t.id === a.taskId) }))
@@ -68,19 +77,25 @@ export default function VariantRunner({ deck, backTo, onRestart, persistKey, ren
   const currentAnswer = { single, multi, text, selfRight };
   const canAdvance = answered && (task?.type !== "essay" || selfRight !== null);
 
+  function hasAnswer() {
+    if (!task) return false;
+    if (task.type === "single" && single === null) return false;
+    if (task.type === "multi" && multi.length === 0) return false;
+    if (task.type === "short" && text.trim() === "") return false;
+    if (task.type === "sequence" && text.trim() === "") return false;
+    if (task.type === "essay" && text.trim() === "") return false;
+    return true;
+  }
+
   function check() {
     if (answered) return;
-    if (task.type === "single" && single === null) return;
-    if (task.type === "multi" && multi.length === 0) return;
-    if (task.type === "short" && text.trim() === "") return;
-    if (task.type === "sequence" && text.trim() === "") return;
+    if (!hasAnswer()) return;
     setAnswered(true);
   }
-  function markSelf(isRight) {
-    if (selfRight !== null) return;
-    setSelfRight(isRight);
-  }
-  function next() {
+
+  function commitAndAdvance() {
+    if (!task || !hasAnswer()) return;
+    // В deferred эссе без самопроверки: считаем неверно (в диагностике эссе нет).
     const right = isTaskRight(task, { single, multi, text, selfRight });
     const record = { task, single, multi, text, selfRight, right };
     const nextAnswers = [...answers, record];
@@ -91,6 +106,14 @@ export default function VariantRunner({ deck, backTo, onRestart, persistKey, ren
     } else {
       setScreen("review");
     }
+  }
+
+  function markSelf(isRight) {
+    if (selfRight !== null) return;
+    setSelfRight(isRight);
+  }
+  function next() {
+    commitAndAdvance();
   }
   function toggleMulti(i) {
     if (answered) return;
@@ -154,27 +177,39 @@ export default function VariantRunner({ deck, backTo, onRestart, persistKey, ren
   if (!task) return null;
 
   const right = isTaskRight(task, currentAnswer);
+  const showReveal = !deferred && answered;
+
   return (
     <Shell>
       <div className="mb-4">
         <div className="flex justify-between font-data font-semibold text-sm tabular-nums text-ink-muted mb-2">
           <span>Задание {pos + 1} из {deck.length}</span>
-          <span>Верно: {answers.filter((a) => a.right).length}</span>
+          {!deferred && (
+            <span>Верно: {answers.filter((a) => a.right).length}</span>
+          )}
         </div>
         <ProgressBar current={pos} total={deck.length} />
       </div>
 
       <TaskCard
-        task={task} answered={answered} right={right}
+        task={task}
+        answered={showReveal}
+        right={right}
+        revealAnswers={showReveal}
+        locked={!deferred && answered}
         single={single} setSingle={setSingle}
         multi={multi} toggleMulti={toggleMulti}
         text={text} setText={setText}
         selfRight={selfRight} onMarkSelf={markSelf}
-        onCheck={check}
+        onCheck={deferred ? commitAndAdvance : check}
       />
 
       <div className="mt-5">
-        {!answered ? (
+        {deferred ? (
+          <PrimaryButton onClick={commitAndAdvance} className="w-full py-3">
+            {pos + 1 < deck.length ? "Дальше" : "К итогам"}
+          </PrimaryButton>
+        ) : !answered ? (
           <DarkButton onClick={check} className="w-full py-3">Проверить</DarkButton>
         ) : canAdvance ? (
           <PrimaryButton onClick={next} className="w-full py-3">

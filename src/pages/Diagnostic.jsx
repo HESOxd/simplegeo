@@ -12,11 +12,13 @@ import {
   buildDiagnosticSet,
   blockTrafficLight,
   summarizeBlocks,
+  rankDiagnosticBlocks,
   encodeResult,
   decodeResult,
   loadDiagHistory,
   pushDiagHistory,
   todayISO,
+  blockExamPoints,
 } from "../diagnosticBuilder.js";
 
 // Личный аккаунт для ?text= (канал prostayageo не подходит). Заполнить перед продом.
@@ -67,13 +69,6 @@ const LIGHT_STYLES = {
 
 const LIGHT_ORDER = { red: 0, yellow: 1, green: 2 };
 
-function rankedBlocks(blocks) {
-  return DIAGNOSTIC_BLOCKS.map((b) => {
-    const [ok, total] = blocks[b.key] || [0, b.count];
-    return { ...b, ok, total, wrong: total - ok, light: blockTrafficLight(ok, total) };
-  }).sort((a, b) => b.wrong - a.wrong || a.ok / a.total - b.ok / b.total);
-}
-
 function firstTrainPos(answers, blockKey) {
   const wrong = answers?.find((a) => a.task?.blockKey === blockKey && !a.right);
   if (wrong) return wrong.task.pos;
@@ -83,11 +78,14 @@ function firstTrainPos(answers, blockKey) {
 }
 
 function telegramText(result, code) {
-  const weak = rankedBlocks(result.blocks).filter((b) => b.wrong > 0).slice(0, 2);
+  const weak = rankDiagnosticBlocks(result.blocks).filter((b) => b.wrong > 0).slice(0, 2);
   const weakPretty = weak.length
     ? weak.map((b) => `${SHORT_NAME[b.key] || b.key} (${b.ok}/${b.total})`).join(", ")
     : "нет явных слабых блоков";
-  return `Привет! Прошёл диагностику на simplegeo. Слабые блоки: ${weakPretty}. Результат: https://simplegeo.ru/tasks/diagnostic/result?r=${code}`;
+  const planPos = weak[0]
+    ? firstTrainPos(null, weak[0].key)
+    : DIAGNOSTIC_BLOCKS[0].positions[0];
+  return `Привет! Прошёл диагностику на simplegeo. Сейчас слабее: ${weakPretty}. План: начать с тренировки №${planPos}. Результат: https://simplegeo.ru/tasks/diagnostic/result?r=${code}`;
 }
 
 function findPrevious(result) {
@@ -100,10 +98,106 @@ function findPrevious(result) {
   return same ? hist[1] || null : hist[0];
 }
 
+function correctAnswerLabel(task) {
+  if (task.type === "short") return Array.isArray(task.answer) ? task.answer.join(" / ") : task.answer;
+  if (task.type === "sequence") return task.answer;
+  if (task.type === "single") {
+    return task.options ? task.options[task.correct] : `вариант ${task.correct + 1}`;
+  }
+  if (task.type === "multi") return task.correct.map((ci) => task.options[ci]).join(", ");
+  return task.answer;
+}
+
+function headlineFor(result, totalOk, totalAll) {
+  const ranked = rankDiagnosticBlocks(result.blocks);
+  const allGreen = ranked.every((b) => b.wrong === 0);
+  if (allGreen) {
+    return {
+      title: "Сильных просадок нет — во всех блоках есть опора.",
+      sub: "Имеет смысл пробовать полный вариант: так проверишь выносливость на 30 заданиях.",
+    };
+  }
+  if (totalOk === 0) {
+    return {
+      title: "Сейчас много нулей — так бывает на первом срезе.",
+      sub: "Диагностика не ставит оценку. Она показывает порядок учёбы. Начни с одного блока — остальное подождёт.",
+    };
+  }
+  const worst = ranked.filter((b) => b.wrong > 0).slice(0, 2);
+  const names = worst.map((b) => SHORT_NAME[b.key] || b.title).join(" и ");
+  return {
+    title: `Пока слабее всего — ${names}.`,
+    sub: "Это не оценка за ОГЭ, а карта, с чего начать тренировку на этой неделе.",
+  };
+}
+
+/** Разбор заданий после итога (только если есть answers с попытки). */
+function DiagnosticReview({ answers, onBack }) {
+  return (
+    <Shell>
+      <button
+        type="button"
+        onClick={onBack}
+        className="text-sm text-ink-muted hover:text-ink mb-4"
+      >
+        ← К итогам
+      </button>
+      <h2 className="text-xl text-ink mb-4">
+        Разбор заданий
+      </h2>
+      <div className="flex flex-col gap-2.5">
+        {answers.map((a, i) => (
+          <div
+            key={i}
+            className={`rounded-lg border-2 p-3.5 ${
+              a.right ? "border-brand-100 bg-brand-100/40" : "border-wrong bg-wrong-100/40"
+            }`}
+          >
+            <div className="flex items-start justify-between gap-3">
+              <p className="text-sm font-medium text-ink">
+                {i + 1}. №{a.task.pos} · {a.task.q}
+              </p>
+              <span
+                className={`shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full ${
+                  a.right ? "bg-brand-100 text-brand-800" : "bg-wrong-100 text-wrong"
+                }`}
+              >
+                {a.right ? "верно" : "пока не сошлось"}
+              </span>
+            </div>
+            {!a.right && (
+              <p className="text-sm text-ink-muted mt-2">
+                Верный ответ:{" "}
+                <b className="text-brand">{correctAnswerLabel(a.task)}</b>
+              </p>
+            )}
+            <Link
+              to={`/tasks/by-number?pos=${a.task.pos}`}
+              className="mt-2 inline-flex text-sm font-semibold text-brand hover:text-brand-800"
+            >
+              Тренировать №{a.task.pos} →
+            </Link>
+          </div>
+        ))}
+      </div>
+    </Shell>
+  );
+}
+
 /** Экран результата диагностики — после прохождения и по ссылке ?r= */
 export function DiagnosticResult({ result, answers = null, previous = null, onRestart }) {
+  const [showReview, setShowReview] = useState(false);
   const code = encodeResult(result);
   const tgHref = `https://t.me/${TELEGRAM_CONTACT}?text=${encodeURIComponent(telegramText(result, code))}`;
+
+  const totalAll = DIAGNOSTIC_BLOCKS.reduce((s, b) => {
+    const [, t] = result.blocks[b.key] || [0, b.count];
+    return s + t;
+  }, 0);
+  const totalOk = DIAGNOSTIC_BLOCKS.reduce((s, b) => {
+    const [ok] = result.blocks[b.key] || [0, 0];
+    return s + ok;
+  }, 0);
 
   const cards = DIAGNOSTIC_BLOCKS.map((b) => {
     const [ok, total] = result.blocks[b.key] || [0, b.count];
@@ -117,6 +211,7 @@ export function DiagnosticResult({ result, answers = null, previous = null, onRe
       if (ok > pOk) historyNote = `В прошлый раз: ${pOk}/${pTotal} → стало лучше`;
       else if (ok < pOk) historyNote = `В прошлый раз: ${pOk}/${pTotal} → стало хуже`;
     }
+    const examMax = blockExamPoints(b);
     return {
       ...b,
       ok,
@@ -126,15 +221,14 @@ export function DiagnosticResult({ result, answers = null, previous = null, onRe
       posLabel,
       historyNote,
       trainPos: firstTrainPos(answers, b.key),
+      examMax,
     };
-  }).sort((a, b) => LIGHT_ORDER[a.light] - LIGHT_ORDER[b.light] || b.wrong - a.wrong);
+  }).sort((a, b) => LIGHT_ORDER[a.light] - LIGHT_ORDER[b.light] || b.wrong - a.wrong || b.examMax - a.examMax);
 
-  const worst = rankedBlocks(result.blocks).slice(0, 2);
-  const riskPoints = worst.reduce((s, b) => s + b.examPoints, 0);
-  const headline =
-    worst.every((b) => b.wrong === 0)
-      ? "Сильных просадок нет — все блоки закрыты."
-      : `Слабее всего — ${worst.map((b) => b.title).join(" и ")}. На экзамене это до ${riskPoints} баллов`;
+  const { title: headline, sub: subline } = headlineFor(result, totalOk, totalAll);
+  const primaryTrain = cards.find((c) => c.wrong > 0)?.trainPos
+    || cards[0]?.trainPos
+    || 10;
 
   const [copied, setCopied] = useState(false);
   function copyLink() {
@@ -145,12 +239,22 @@ export function DiagnosticResult({ result, answers = null, previous = null, onRe
     }).catch(() => {});
   }
 
+  if (showReview && answers?.length) {
+    return <DiagnosticReview answers={answers} onBack={() => setShowReview(false)} />;
+  }
+
   return (
     <Shell>
       <div className="text-center mb-8">
         <img src={MASCOT.finish} alt="" className="w-24 h-24 object-contain mx-auto mb-1" />
         <p className="font-data text-label uppercase text-brand">Результат диагностики</p>
         <p className="mt-3 text-lg text-ink font-medium leading-snug">{headline}</p>
+        <p className="mt-2 text-sm text-ink-muted leading-snug max-w-lg mx-auto">{subline}</p>
+        {totalOk === 0 && (
+          <p className="mt-2 text-xs text-ink-muted">
+            {totalOk} из {totalAll} в этой попытке · можно пройти ещё раз после практики
+          </p>
+        )}
       </div>
 
       <div className="flex flex-col gap-2.5 mb-8">
@@ -167,6 +271,9 @@ export function DiagnosticResult({ result, answers = null, previous = null, onRe
                   <p className="font-semibold text-ink mt-1">{c.title}</p>
                   <p className="text-sm text-ink-muted mt-0.5">
                     задания №{c.posLabel.join(", ")} · {c.ok}/{c.total}
+                  </p>
+                  <p className="text-xs text-ink-muted mt-1 leading-snug">
+                    С темой связаны задания примерно на {c.examMax} из 31 первичных баллов на ОГЭ — ориентир тем, не прогноз.
                   </p>
                   {c.historyNote && (
                     <p className="text-xs text-ink-muted mt-1">{c.historyNote}</p>
@@ -187,14 +294,48 @@ export function DiagnosticResult({ result, answers = null, previous = null, onRe
         })}
       </div>
 
-      <a
-        href={tgHref}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex w-full items-center justify-center text-center bg-brand hover:bg-brand-800 text-white font-bold py-3.5 rounded-md shadow-step active:shadow-step-pressed active:translate-y-[2px] transition-[transform,box-shadow,background-color] duration-[120ms] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-brand-300 focus-visible:outline-offset-[3px] mb-3"
-      >
-        Разобрать результат с Юрием
-      </a>
+      {totalOk === 0 ? (
+        <Link
+          to={`/tasks/by-number?pos=${primaryTrain}`}
+          className="flex w-full items-center justify-center text-center bg-brand hover:bg-brand-800 text-white font-bold py-3.5 rounded-md shadow-step active:shadow-step-pressed active:translate-y-[2px] transition-[transform,box-shadow,background-color] duration-[120ms] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-brand-300 focus-visible:outline-offset-[3px] mb-3"
+        >
+          Тренировать №{primaryTrain}
+        </Link>
+      ) : (
+        <a
+          href={tgHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex w-full items-center justify-center text-center bg-brand hover:bg-brand-800 text-white font-bold py-3.5 rounded-md shadow-step active:shadow-step-pressed active:translate-y-[2px] transition-[transform,box-shadow,background-color] duration-[120ms] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-brand-300 focus-visible:outline-offset-[3px] mb-3"
+        >
+          Разобрать результат с Юрием
+        </a>
+      )}
+
+      {totalOk === 0 && (
+        <a
+          href={tgHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block w-full text-center text-sm font-medium text-ink-muted hover:text-ink py-2 mb-1"
+        >
+          Разобрать с Юрием — спокойно, без стыда
+        </a>
+      )}
+
+      {answers?.length ? (
+        <SecondaryButton onClick={() => setShowReview(true)} className="w-full py-3 mb-3">
+          Разобрать задания
+        </SecondaryButton>
+      ) : (
+        <p className="text-center text-sm text-ink-muted mb-3">
+          Чтобы увидеть эталоны по заданиям,{" "}
+          <Link to="/tasks/diagnostic" className="font-semibold text-brand hover:text-brand-800">
+            пройди диагностику
+          </Link>
+          .
+        </p>
+      )}
 
       {onRestart && (
         <SecondaryButton onClick={onRestart} className="w-full py-3 mb-3">
@@ -220,7 +361,7 @@ export function DiagnosticResult({ result, answers = null, previous = null, onRe
 /** Мост: один раз пишет историю и подменяет URL на ?r= */
 function ResultBridge({ answers, onRestart, date }) {
   const blocks = useMemo(() => summarizeBlocks(answers), [answers]);
-  const result = useMemo(() => ({ date, blocks }), [date, blocks]);
+  const result = useMemo(() => ({ date, blocks, version: 2 }), [date, blocks]);
   const saved = useRef(false);
   const [previous, setPrevious] = useState(null);
 
@@ -268,7 +409,8 @@ function DiagnosticQuiz() {
       deck={deck}
       backTo="/tasks"
       onRestart={restart}
-      persistKey={`diag:${date}`}
+      persistKey={`diag:v2:${date}`}
+      revealMode="deferred"
       renderResult={({ answers, onRestart: restartFromRunner }) => (
         <ResultBridge answers={answers} onRestart={restartFromRunner} date={date} />
       )}
@@ -305,8 +447,8 @@ export default function Diagnostic() {
               Узнай свои слабые места
             </h1>
             <p className="text-ink-muted mt-3 text-base sm:text-lg leading-snug max-w-xl">
-              {DIAGNOSTIC_TOTAL} заданий · около 20 минут · отчёт по семи блокам экзамена.
-              Без таймера и без прогноза оценки — только карта, где теряются баллы.
+              {DIAGNOSTIC_TOTAL} заданий · около 10–12 минут · отчёт по семи блокам.
+              Правильные ответы покажем после прохождения. Без таймера и без прогноза оценки.
             </p>
             <PrimaryButton
               onClick={() => setStarted(true)}

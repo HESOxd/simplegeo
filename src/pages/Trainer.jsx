@@ -149,7 +149,7 @@ export default function Trainer() {
             <img src={MASCOT.welcome} alt="" className="w-12 h-12 object-contain shrink-0" />
             <div className="flex-1 min-w-0">
               <p className="font-semibold text-ink">Узнай свои слабые места</p>
-              <p className="text-sm text-ink-muted mt-0.5">19 заданий · 20 минут · отчёт по блокам</p>
+              <p className="text-sm text-ink-muted mt-0.5">13 заданий · ~10–12 минут · ответы после</p>
             </div>
             <OpenBadge />
           </Link>
@@ -321,8 +321,15 @@ const ANSWER = {
   dim: "border-line opacity-[.55]",
 };
 
-export function TaskCard({ task, answered, right, single, setSingle, multi, toggleMulti, text, setText, selfRight, onMarkSelf, onCheck, kicker }) {
-  const awaitingSelfCheck = task.type === "essay" && answered && selfRight === null;
+// revealAnswers — показывать эталон и вердикт (false в диагностике deferred).
+// locked — запретить менять ответ; по умолчанию = answered.
+export function TaskCard({
+  task, answered, right, single, setSingle, multi, toggleMulti, text, setText,
+  selfRight, onMarkSelf, onCheck, kicker, revealAnswers, locked,
+}) {
+  const showReveal = revealAnswers ?? answered;
+  const isLocked = locked ?? answered;
+  const awaitingSelfCheck = task.type === "essay" && showReveal && selfRight === null;
   const [zoomedSrc, setZoomedSrc] = useState(null);
   return (
     <div className="bg-surface rounded-lg border border-line p-5 sm:p-6">
@@ -404,13 +411,13 @@ export function TaskCard({ task, answered, right, single, setSingle, multi, togg
         <div className="mt-5 grid grid-cols-2 gap-3">
           {task.optionImages.map((img, i) => {
             let s = ANSWER.idle;
-            if (answered) {
+            if (showReveal) {
               if (i === task.correct) s = ANSWER.correct;
               else if (i === single) s = ANSWER.wrong;
               else s = ANSWER.dim;
             } else if (i === single) s = ANSWER.selected;
             return (
-              <button key={i} disabled={answered} onClick={() => setSingle(i)}
+              <button key={i} disabled={isLocked} onClick={() => setSingle(i)}
                 className={`text-left p-3 rounded-md border-2 transition-colors flex flex-col items-center gap-2 ${s}`}>
                 <span className="flex-shrink-0 w-6 h-6 rounded-full bg-sunk text-ink-muted text-sm font-semibold flex items-center justify-center">{i + 1}</span>
                 <img src={img} alt={`вариант ${i + 1}`} className="max-h-40 object-contain" />
@@ -424,13 +431,13 @@ export function TaskCard({ task, answered, right, single, setSingle, multi, togg
         <div className="mt-5 space-y-3">
           {task.options.map((opt, i) => {
             let s = ANSWER.idle;
-            if (answered) {
+            if (showReveal) {
               if (i === task.correct) s = ANSWER.correct;
               else if (i === single) s = ANSWER.wrong;
               else s = ANSWER.dim;
             } else if (i === single) s = ANSWER.selected;
             return (
-              <button key={i} disabled={answered} onClick={() => setSingle(i)}
+              <button key={i} disabled={isLocked} onClick={() => setSingle(i)}
                 className={`w-full text-left px-4 py-3 rounded-md border-2 transition-colors text-ink flex items-start gap-3 ${s}`}>
                 <span className="flex-shrink-0 w-6 h-6 rounded-full bg-sunk text-ink-muted text-sm font-semibold flex items-center justify-center">{i + 1}</span>
                 <span>{opt}</span>
@@ -445,13 +452,13 @@ export function TaskCard({ task, answered, right, single, setSingle, multi, togg
           {task.options.map((opt, i) => {
             const picked = multi.includes(i);
             let s = picked ? ANSWER.selected : ANSWER.idle;
-            if (answered) {
+            if (showReveal) {
               if (task.correct.includes(i)) s = ANSWER.correct;
               else if (picked) s = ANSWER.wrong;
               else s = ANSWER.dim;
             }
             return (
-              <button key={i} disabled={answered} onClick={() => toggleMulti(i)}
+              <button key={i} disabled={isLocked} onClick={() => toggleMulti(i)}
                 className={`w-full text-left px-4 py-3 rounded-md border-2 transition-colors text-ink flex items-center gap-3 ${s}`}>
                 <span className="flex-shrink-0 w-6 h-6 rounded-full bg-sunk text-ink-muted text-sm font-semibold flex items-center justify-center">{i + 1}</span>
                 <span className={`w-5 h-5 rounded-xs border-[1.5px] flex-shrink-0 ${picked ? "bg-ink border-ink" : "border-line-strong"}`} />
@@ -468,11 +475,11 @@ export function TaskCard({ task, answered, right, single, setSingle, multi, togg
             value={text}
             onChange={(e) => setText(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && onCheck()}
-            disabled={answered}
+            disabled={isLocked}
             placeholder=""
-            className={`w-full px-4 py-3 rounded-md border-2 outline-none text-ink ${answered ? (right ? "border-brand bg-brand-100" : "border-wrong bg-wrong-100") : "border-line-strong focus:border-brand"}`}
+            className={`w-full px-4 py-3 rounded-md border-2 outline-none text-ink ${showReveal ? (right ? "border-brand bg-brand-100" : "border-wrong bg-wrong-100") : "border-line-strong focus:border-brand"}`}
           />
-          {answered && !right && (
+          {showReveal && !right && (
             <p className="mt-2 text-sm text-ink-muted">Верный ответ: <b className="text-brand">{Array.isArray(task.answer) ? task.answer.join(" / ") : task.answer}</b></p>
           )}
         </div>
@@ -484,12 +491,12 @@ export function TaskCard({ task, answered, right, single, setSingle, multi, togg
             value={text}
             onChange={(e) => setText(e.target.value.replace(/[^0-9]/g, ""))}
             onKeyDown={(e) => e.key === "Enter" && onCheck()}
-            disabled={answered}
+            disabled={isLocked}
             inputMode="numeric"
             placeholder="Впиши цифры без пробелов, например 213"
-            className={`w-full px-4 py-3 rounded-md border-2 outline-none text-ink tracking-widest ${answered ? (right ? "border-brand bg-brand-100" : "border-wrong bg-wrong-100") : "border-line-strong focus:border-brand"}`}
+            className={`w-full px-4 py-3 rounded-md border-2 outline-none text-ink tracking-widest ${showReveal ? (right ? "border-brand bg-brand-100" : "border-wrong bg-wrong-100") : "border-line-strong focus:border-brand"}`}
           />
-          {answered && !right && (
+          {showReveal && !right && (
             <p className="mt-2 text-sm text-ink-muted">Верный ответ: <b className="text-brand">{task.answer}</b></p>
           )}
         </div>
@@ -500,12 +507,12 @@ export function TaskCard({ task, answered, right, single, setSingle, multi, togg
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
-            disabled={answered}
+            disabled={isLocked}
             rows={4}
             placeholder="Напиши свой ответ (можно кратко, своими словами)"
             className="w-full px-4 py-3 rounded-md border-2 outline-none text-ink border-line-strong focus:border-brand resize-none"
           />
-          {answered && (
+          {showReveal && (
             <div className="mt-4 p-4 rounded-lg bg-brand-100 border border-brand-100">
               <p className="font-data text-label text-brand uppercase mb-1">Эталонный ответ</p>
               <p className="text-sm text-ink leading-relaxed">{task.answer}</p>
@@ -529,7 +536,7 @@ export function TaskCard({ task, answered, right, single, setSingle, multi, togg
         </div>
       )}
 
-      {answered && !awaitingSelfCheck && (
+      {showReveal && !awaitingSelfCheck && (
         <div className={`mt-4 flex items-center gap-2 text-sm font-medium ${right ? "text-brand" : "text-wrong"}`}>
           <img src={right ? MASCOT.correct : MASCOT.wrong} alt="" className="w-10 h-10 object-contain flex-shrink-0" />
           {right ? "Верно" : "Неверно"}
