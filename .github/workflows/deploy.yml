@@ -27,30 +27,9 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.S3_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
           AWS_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt
-        run: |
-          # Хэшированные assets (JS/CSS) можно кэшировать надолго — имя файла
-          # меняется при каждой правке, старое имя больше никогда не переиспользуется.
-          aws s3 sync ./dist s3://${{ secrets.S3_BUCKET }} \
-            --endpoint-url ${{ secrets.S3_ENDPOINT }} \
-            --delete \
-            --exclude "index.html" \
-            --exclude "weekly-variants.json" \
-            --cache-control "public, max-age=31536000, immutable"
-
-          # index.html — точка входа SPA, её отдаёт хостинг на ЛЮБОЙ вложенный
-          # маршрут (/tasks, /about, /course). Без no-cache промежуточные кэши
-          # держат её "свежей" эвристически часами и подсовывают ссылки на уже
-          # удалённые (пересобранные) JS/CSS — из-за этого белый экран при
-          # обновлении страницы.
-          aws s3 cp ./dist/index.html s3://${{ secrets.S3_BUCKET }}/index.html \
-            --endpoint-url ${{ secrets.S3_ENDPOINT }} \
-            --cache-control "no-cache, no-store, must-revalidate"
-
-          # weekly-variants.json — та же логика: имя файла не меняется, а
-          # содержимое должно обновляться раз в неделю, поэтому без no-cache
-          # браузеры/CDN отдавали бы старые варианты ещё год.
-          if [ -f ./dist/weekly-variants.json ]; then
-            aws s3 cp ./dist/weekly-variants.json s3://${{ secrets.S3_BUCKET }}/weekly-variants.json \
-              --endpoint-url ${{ secrets.S3_ENDPOINT }} \
-              --cache-control "no-cache, no-store, must-revalidate"
-          fi
+          S3_BUCKET: ${{ secrets.S3_BUCKET }}
+          S3_ENDPOINT: ${{ secrets.S3_ENDPOINT }}
+          SITE_URL: https://www.simplegeo.ru
+        # Кэш, сжатие и порядок заливки — в scripts/deploy-s3.sh (общий для
+        # deploy.yml и weekly-variants.yml).
+        run: bash scripts/deploy-s3.sh

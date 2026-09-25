@@ -86,12 +86,15 @@ git push
 3. Включить HTTPS для домена (в панели Selectel — выпуск сертификата).
 4. Подождать обновления DNS (от 10 минут до нескольких часов).
 
-### Автозаливка через S3-клиент (удобно при частых обновлениях)
+### Автозаливка
+Обычно ничего делать не нужно: `git push` в `main` сам собирает и заливает сайт
+(`.github/workflows/deploy.yml` → `scripts/deploy-s3.sh`). Скрипт сжимает файлы и
+ставит правила кэша — голый `aws s3 sync` этого не делает.
+
+Если всё же надо залить руками — тем же скриптом (нужен aws-cli с ключами Selectel S3
+в переменных окружения `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY`):
 ```bash
-# поставить aws-cli, затем настроить профиль с ключами Selectel S3 (Доступ → S3-ключи)
-aws s3 sync ./dist s3://ИМЯ_КОНТЕЙНЕРА \
-  --endpoint-url https://s3.storage.selcloud.ru \
-  --delete
+npm run build && S3_BUCKET=ИМЯ_КОНТЕЙНЕРА S3_ENDPOINT=https://s3.storage.selcloud.ru SITE_URL=https://www.simplegeo.ru bash scripts/deploy-s3.sh
 ```
 Точный endpoint и ключи бери в панели Selectel. Ключи держи только у себя, в код не коммить.
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { isTaskRight } from "./utils.js";
 import { useTaskScreen } from "./brand/PageBackground.jsx";
-import { MASCOT } from "./brand/mascot.js";
+import { Mascot } from "./brand/Mascot.jsx";
 import { TaskCard, Shell, ProgressBar, PrimaryButton, DarkButton } from "./pages/Trainer.jsx";
 
 function loadProgress(key) {
@@ -129,7 +129,7 @@ export default function VariantRunner({
     return (
       <Shell>
         <div className="text-center mb-8">
-          <img src={MASCOT.finish} alt="" className="w-24 h-24 object-contain mx-auto mb-1" />
+          <Mascot name="finish" className="w-24 h-24 object-contain mx-auto mb-1" />
           <p className="font-data text-label uppercase text-brand">Результат варианта</p>
           <p className="mt-3 text-6xl font-bold text-ink">{correctCount}<span className="text-2xl text-ink-muted">/{answers.length}</span></p>
           <p className="mt-1 text-lg text-ink-muted">{pct}% верных</p>

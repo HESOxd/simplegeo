@@ -321,12 +321,18 @@ import { Icon } from "../brand/Icon.jsx";
 > на изолиниях — нужна подложка, а не подбор seed.
 
 **Маскот.** Хамелеон-проводник, 5 поз с прозрачным фоном в `src/brand/mascot/` —
-канонические версии из кита. В коде — только через `MASCOT`:
+канонические версии из кита, уменьшенные под самый крупный показ ×3 (экраны
+iPhone): `welcome` — 540 px (старт диагностики, до 180 px), остальные — 384 px.
+Каждая поза — WebP (20–40 КБ) и PNG для старых iPhone без WebP. Оригиналы в
+полном размере — в бренд-ките. В коде — только через компонент:
 
 ```jsx
-import { MASCOT } from "../brand/mascot.js";
-<img src={MASCOT.finish} alt="" className="w-24 h-24 object-contain" />
+import { Mascot } from "../brand/Mascot.jsx";
+<Mascot name="finish" className="w-24 h-24 object-contain" />
 ```
+
+Показываешь маскота крупнее 180 px — пересобери файл из оригинала кита под
+новый размер ×3, иначе он будет мыльным.
 
 Навигация и обратная связь, не декор внутри заданий. Зелёный маскота `#2E9A5C`
 в интерфейс не переносить.
@@ -438,7 +444,7 @@ import { MASCOT } from "../brand/mascot.js";
 | Тема Tailwind | `tailwind.config.js` |
 | Компонент иконок | `src/brand/Icon.jsx` |
 | Изолинии на фоне страницы, `useTaskScreen` | `src/brand/PageBackground.jsx`, узор — `src/brand/iso/page.svg` |
-| Маскот | `src/brand/mascot/`, подключение — `src/brand/mascot.js` |
+| Маскот | `src/brand/mascot/` (webp + png), компонент — `src/brand/Mascot.jsx` |
 | Шапка | `TopNav` в `src/App.jsx` |
 | Кнопки, чипы, состояния ответа, карточки разделов | `src/pages/Trainer.jsx` |
 | Логотипы, фавикон 48 px, иконки, OG, генератор изолиний | `public/brand/` |

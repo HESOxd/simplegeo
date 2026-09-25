@@ -5,7 +5,7 @@ import VariantRunner from "../VariantRunner.jsx";
 import NotFound from "./NotFound.jsx";
 import { Shell, PrimaryButton, SecondaryButton } from "./Trainer.jsx";
 import { Icon } from "../brand/Icon.jsx";
-import { MASCOT } from "../brand/mascot.js";
+import { Mascot } from "../brand/Mascot.jsx";
 import {
   DIAGNOSTIC_BLOCKS,
   DIAGNOSTIC_TOTAL,
@@ -246,7 +246,7 @@ export function DiagnosticResult({ result, answers = null, previous = null, onRe
   return (
     <Shell>
       <div className="text-center mb-8">
-        <img src={MASCOT.finish} alt="" className="w-24 h-24 object-contain mx-auto mb-1" />
+        <Mascot name="finish" className="w-24 h-24 object-contain mx-auto mb-1" />
         <p className="font-data text-label uppercase text-brand">Результат диагностики</p>
         <p className="mt-3 text-lg text-ink font-medium leading-snug">{headline}</p>
         <p className="mt-2 text-sm text-ink-muted leading-snug max-w-lg mx-auto">{subline}</p>
@@ -433,9 +433,8 @@ export default function Diagnostic() {
           </Link>
 
           <div className="flex-1 flex flex-col items-center justify-center text-center gap-0">
-            <img
-              src={MASCOT.welcome}
-              alt=""
+            <Mascot
+              name="welcome"
               className="w-[150px] h-[150px] sm:w-[170px] sm:h-[170px] md:w-[180px] md:h-[180px] object-contain mb-4"
             />
             <p className="font-data text-label text-brand uppercase">

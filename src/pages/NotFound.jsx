@@ -1,13 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Shell } from "./Trainer.jsx";
-import { MASCOT } from "../brand/mascot.js";
+import { Mascot } from "../brand/Mascot.jsx";
 
 export default function NotFound() {
   return (
     <Shell>
       <div className="text-center py-10">
-        <img src={MASCOT.empty} alt="" className="w-32 h-32 object-contain mx-auto mb-4" />
+        <Mascot name="empty" className="w-32 h-32 object-contain mx-auto mb-4" />
         <h1 className="text-2xl font-bold text-ink">Такой страницы нет</h1>
         <p className="text-ink-muted mt-2">Похоже, адрес битый или страница переехала.</p>
         <Link

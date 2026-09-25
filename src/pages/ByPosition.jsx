@@ -4,7 +4,7 @@ import { TASKS } from "../data.js";
 import { buildPositionPools, POSITION_TOPIC } from "../positionClassifier.js";
 import { shuffle, isTaskRight } from "../utils.js";
 import { useTaskScreen } from "../brand/PageBackground.jsx";
-import { MASCOT } from "../brand/mascot.js";
+import { Mascot } from "../brand/Mascot.jsx";
 import { Shell, Chip, TaskCard, ProgressBar, PrimaryButton, DarkButton } from "./Trainer.jsx";
 
 // Тренировка по конкретному номеру задания (1-30), как на sdamgia —
@@ -165,7 +165,7 @@ export default function ByPosition() {
     return (
       <Shell>
         <div className="text-center py-6">
-          <img src={MASCOT.finish} alt="" className="w-24 h-24 object-contain mx-auto mb-1" />
+          <Mascot name="finish" className="w-24 h-24 object-contain mx-auto mb-1" />
           <p className="font-data text-label uppercase text-brand">Задание {pos} · Результат</p>
           <p className="mt-3 text-6xl font-bold text-ink">{correctCount}<span className="text-2xl text-ink-muted">/{deck.length}</span></p>
           <p className="mt-1 text-lg text-ink-muted">{Math.round((correctCount / deck.length) * 100)}% верных</p>

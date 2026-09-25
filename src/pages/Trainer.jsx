@@ -4,7 +4,11 @@ import { TASKS, SECTIONS } from "../data.js";
 import { norm, shuffle, isTaskRight } from "../utils.js";
 import { Icon } from "../brand/Icon.jsx";
 import { useTaskScreen } from "../brand/PageBackground.jsx";
-import { MASCOT } from "../brand/mascot.js";
+import { Mascot } from "../brand/Mascot.jsx";
+// Уменьшенные копии для главной: фото показывается кружком 48 px, превью гайда —
+// в карточке шириной ~360 px. Оригиналы в public/ — для «Обо мне» и «Курса».
+import photoAvatar from "../assets/photo-avatar.jpg";
+import coursePreviewCard from "../assets/course-preview-card.jpg";
 
 const PASSAGE_INTRO_RE = /^Прочитайте текст и выполните задания\.?\s*/;
 
@@ -146,7 +150,7 @@ export default function Trainer() {
             to="/tasks/diagnostic"
             className="group flex items-center gap-3 mb-4 bg-surface border border-line hover:border-line-strong rounded-lg p-4 transition-colors"
           >
-            <img src={MASCOT.welcome} alt="" className="w-12 h-12 object-contain shrink-0" />
+            <Mascot name="welcome" className="w-12 h-12 object-contain shrink-0" />
             <div className="flex-1 min-w-0">
               <p className="font-semibold text-ink">Узнай свои слабые места</p>
               <p className="text-sm text-ink-muted mt-0.5">13 заданий · ~10–12 минут · ответы после</p>
@@ -216,13 +220,13 @@ export default function Trainer() {
 
         <div className="flex flex-col gap-4 lg:sticky lg:top-6 lg:self-start">
           <div className="flex items-center gap-3 bg-surface rounded-lg border border-line p-4">
-            <img src={MASCOT.welcome} alt="" className="w-14 h-14 object-contain flex-shrink-0" />
+            <Mascot name="welcome" className="w-14 h-14 object-contain flex-shrink-0" />
             <p className="text-sm text-ink-muted leading-snug">Привет! Выбери раздел слева и начинай — разберём вместе, если что-то пойдёт не так.</p>
           </div>
 
           <Link to="/about" className="block bg-surface rounded-lg border border-line p-5 hover:border-line-strong transition-colors">
             <div className="flex items-center gap-3 mb-3">
-              <img src="/photo.jpg" alt="Юрий" className="w-12 h-12 rounded-full object-cover border-2 border-brand-100" />
+              <img src={photoAvatar} alt="Юрий" className="w-12 h-12 rounded-full object-cover border-2 border-brand-100" />
               <div>
                 <p className="font-semibold text-ink">Юрий</p>
                 <p className="text-xs text-ink-muted">Репетитор по географии</p>
@@ -233,7 +237,7 @@ export default function Trainer() {
           </Link>
 
           <Link to="/course" className="block bg-surface rounded-lg border border-line overflow-hidden hover:border-line-strong transition-colors">
-            <img src="/course-preview.jpg" alt="Полный гайд по решению заданий ОГЭ" className="w-full aspect-video object-contain bg-sunk border-b border-line" />
+            <img src={coursePreviewCard} alt="Полный гайд по решению заданий ОГЭ" className="w-full aspect-video object-contain bg-sunk border-b border-line" />
             <div className="p-5">
               <p className="font-semibold text-ink mb-1">Полный гайд по решению заданий ОГЭ</p>
               <p className="text-sm text-ink-muted leading-relaxed mb-3">Mind map по всем заданиям, примеры решений и лайфхаки.</p>
@@ -259,7 +263,7 @@ export default function Trainer() {
     return (
       <Shell>
         <div className="text-center py-6">
-          <img src={MASCOT.finish} alt="" className="w-24 h-24 object-contain mx-auto mb-1" />
+          <Mascot name="finish" className="w-24 h-24 object-contain mx-auto mb-1" />
           <p className="font-data text-label uppercase text-brand">Результат</p>
           <p className="mt-3 text-6xl font-bold text-ink">{correctCount}<span className="text-2xl text-ink-muted">/{deck.length}</span></p>
           <p className="mt-1 text-lg text-ink-muted">{pct}% верных · {verdict}</p>
@@ -538,7 +542,7 @@ export function TaskCard({
 
       {showReveal && !awaitingSelfCheck && (
         <div className={`mt-4 flex items-center gap-2 text-sm font-medium ${right ? "text-brand" : "text-wrong"}`}>
-          <img src={right ? MASCOT.correct : MASCOT.wrong} alt="" className="w-10 h-10 object-contain flex-shrink-0" />
+          <Mascot name={right ? "correct" : "wrong"} className="w-10 h-10 object-contain flex-shrink-0" />
           {right ? "Верно" : "Неверно"}
         </div>
       )}
